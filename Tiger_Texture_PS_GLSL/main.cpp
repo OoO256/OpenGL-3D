@@ -80,14 +80,14 @@ int cur_frame_tiger = 0, cur_frame_ben = 0, cur_frame_wolf = 0, cur_frame_spider
 float rotation_angle_tiger = 0.0f;
 
 // my object
-object drangon("Data/static_objects/dragon_vnt.geom", "Data/dynamic_objects/tiger/tiger_tex2.jpg");
-object optimus("Data/static_objects/optimus_vnt.geom", "Data/dynamic_objects/tiger/tiger_tex2.jpg");
-object cow("Data/static_objects/cow_vn.geom", "Data/dynamic_objects/tiger/tiger_tex2.jpg");
-object bike("Data/static_objects/bike_vnt.geom", "Data/dynamic_objects/tiger/tiger_tex2.jpg");
-object bus("Data/static_objects/bus_vnt.geom", "Data/dynamic_objects/tiger/tiger_tex2.jpg");
-object godzilla("Data/static_objects/godzilla_vnt.geom", "Data/dynamic_objects/tiger/tiger_tex2.jpg");
-object ironman("Data/static_objects/ironman_vnt.geom", "Data/dynamic_objects/tiger/tiger_tex2.jpg");
-object tank("Data/static_objects/tank_vnt.geom", "Data/dynamic_objects/tiger/tiger_tex2.jpg");
+object drangon("Data/static_objects/dragon_vnt.geom");
+object optimus("Data/static_objects/optimus_vnt.geom");
+object cow("Data/static_objects/cow_vn.geom");
+object bike("Data/static_objects/bike_vnt.geom");
+object bus("Data/static_objects/bus_vnt.geom");
+object godzilla("Data/static_objects/godzilla_vnt.geom");
+object ironman("Data/static_objects/ironman_vnt.geom");
+object tank("Data/static_objects/tank_vnt.geom");
 
 
  // tiger object
@@ -492,507 +492,6 @@ void prepare_tiger(void) { // vertices enumerated clockwise
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
-void prepare_optimus(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, optimus_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	sprintf(filename, "Data/static_objects/optimus_vnt.geom");
-	optimus_n_triangles = read_geometry(&optimus_vertices, n_bytes_per_triangle, filename);
-	// assume all geometry files are effective
-	optimus_n_total_triangles += optimus_n_triangles;
-
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &optimus_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, optimus_VBO);
-	glBufferData(GL_ARRAY_BUFFER, optimus_n_total_triangles * 3 * n_bytes_per_vertex, optimus_vertices, GL_STATIC_DRAW);
-
-	// as the geometry data exists now in graphics memory, ...
-	free(optimus_vertices);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &optimus_VAO);
-	glBindVertexArray(optimus_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, optimus_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_optimus.ambient_color[0] = 0.24725f;
-	//material_optimus.ambient_color[1] = 0.1995f;
-	//material_optimus.ambient_color[2] = 0.0745f;
-	//material_optimus.ambient_color[3] = 1.0f;
-	//
-	//material_optimus.diffuse_color[0] = 0.75164f;
-	//material_optimus.diffuse_color[1] = 0.60648f;
-	//material_optimus.diffuse_color[2] = 0.22648f;
-	//material_optimus.diffuse_color[3] = 1.0f;
-	//
-	//material_optimus.specular_color[0] = 0.728281f;
-	//material_optimus.specular_color[1] = 0.655802f;
-	//material_optimus.specular_color[2] = 0.466065f;
-	//material_optimus.specular_color[3] = 1.0f;
-	//
-	//material_optimus.specular_exponent = 51.2f;
-	//
-	//material_optimus.emissive_color[0] = 0.1f;
-	//material_optimus.emissive_color[1] = 0.1f;
-	//material_optimus.emissive_color[2] = 0.0f;
-	//material_optimus.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-void prepare_cow(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, cow_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	sprintf(filename, "Data/static_objects/cow_vn.geom");
-	cow_n_triangles = read_geometry(&cow_vertices, n_bytes_per_triangle, filename);
-	// assume all geometry files are effective
-	cow_n_total_triangles += cow_n_triangles;
-
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &cow_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, cow_VBO);
-	glBufferData(GL_ARRAY_BUFFER, cow_n_total_triangles * 3 * n_bytes_per_vertex, cow_vertices, GL_STATIC_DRAW);
-
-	// as the geometry data exists now in graphics memory, ...
-	free(cow_vertices);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &cow_VAO);
-	glBindVertexArray(cow_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, cow_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_cow.ambient_color[0] = 0.24725f;
-	//material_cow.ambient_color[1] = 0.1995f;
-	//material_cow.ambient_color[2] = 0.0745f;
-	//material_cow.ambient_color[3] = 1.0f;
-	//
-	//material_cow.diffuse_color[0] = 0.75164f;
-	//material_cow.diffuse_color[1] = 0.60648f;
-	//material_cow.diffuse_color[2] = 0.22648f;
-	//material_cow.diffuse_color[3] = 1.0f;
-	//
-	//material_cow.specular_color[0] = 0.728281f;
-	//material_cow.specular_color[1] = 0.655802f;
-	//material_cow.specular_color[2] = 0.466065f;
-	//material_cow.specular_color[3] = 1.0f;
-	//
-	//material_cow.specular_exponent = 51.2f;
-	//
-	//material_cow.emissive_color[0] = 0.1f;
-	//material_cow.emissive_color[1] = 0.1f;
-	//material_cow.emissive_color[2] = 0.0f;
-	//material_cow.emissive_color[3] = 1.0f;
-}
-void prepare_bike(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, bike_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	sprintf(filename, "Data/static_objects/bike_vnt.geom");
-	bike_n_triangles = read_geometry(&bike_vertices, n_bytes_per_triangle, filename);
-	// assume all geometry files are effective
-	bike_n_total_triangles += bike_n_triangles;
-
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &bike_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, bike_VBO);
-	glBufferData(GL_ARRAY_BUFFER, bike_n_total_triangles * 3 * n_bytes_per_vertex, bike_vertices, GL_STATIC_DRAW);
-
-	// as the geometry data exists now in graphics memory, ...
-	free(bike_vertices);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &bike_VAO);
-	glBindVertexArray(bike_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, bike_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_bike.ambient_color[0] = 0.24725f;
-	//material_bike.ambient_color[1] = 0.1995f;
-	//material_bike.ambient_color[2] = 0.0745f;
-	//material_bike.ambient_color[3] = 1.0f;
-	//
-	//material_bike.diffuse_color[0] = 0.75164f;
-	//material_bike.diffuse_color[1] = 0.60648f;
-	//material_bike.diffuse_color[2] = 0.22648f;
-	//material_bike.diffuse_color[3] = 1.0f;
-	//
-	//material_bike.specular_color[0] = 0.728281f;
-	//material_bike.specular_color[1] = 0.655802f;
-	//material_bike.specular_color[2] = 0.466065f;
-	//material_bike.specular_color[3] = 1.0f;
-	//
-	//material_bike.specular_exponent = 51.2f;
-	//
-	//material_bike.emissive_color[0] = 0.1f;
-	//material_bike.emissive_color[1] = 0.1f;
-	//material_bike.emissive_color[2] = 0.0f;
-	//material_bike.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-void prepare_bus(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, bus_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	sprintf(filename, "Data/static_objects/bus_vnt.geom");
-	bus_n_triangles = read_geometry(&bus_vertices, n_bytes_per_triangle, filename);
-	// assume all geometry files are effective
-	bus_n_total_triangles += bus_n_triangles;
-
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &bus_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, bus_VBO);
-	glBufferData(GL_ARRAY_BUFFER, bus_n_total_triangles * 3 * n_bytes_per_vertex, bus_vertices, GL_STATIC_DRAW);
-
-	// as the geometry data exists now in graphics memory, ...
-	free(bus_vertices);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &bus_VAO);
-	glBindVertexArray(bus_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, bus_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_bus.ambient_color[0] = 0.24725f;
-	//material_bus.ambient_color[1] = 0.1995f;
-	//material_bus.ambient_color[2] = 0.0745f;
-	//material_bus.ambient_color[3] = 1.0f;
-	//
-	//material_bus.diffuse_color[0] = 0.75164f;
-	//material_bus.diffuse_color[1] = 0.60648f;
-	//material_bus.diffuse_color[2] = 0.22648f;
-	//material_bus.diffuse_color[3] = 1.0f;
-	//
-	//material_bus.specular_color[0] = 0.728281f;
-	//material_bus.specular_color[1] = 0.655802f;
-	//material_bus.specular_color[2] = 0.466065f;
-	//material_bus.specular_color[3] = 1.0f;
-	//
-	//material_bus.specular_exponent = 51.2f;
-	//
-	//material_bus.emissive_color[0] = 0.1f;
-	//material_bus.emissive_color[1] = 0.1f;
-	//material_bus.emissive_color[2] = 0.0f;
-	//material_bus.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-void prepare_godzilla(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, godzilla_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	sprintf(filename, "Data/static_objects/godzilla_vnt.geom");
-	godzilla_n_triangles = read_geometry(&godzilla_vertices, n_bytes_per_triangle, filename);
-	// assume all geometry files are effective
-	godzilla_n_total_triangles += godzilla_n_triangles;
-
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &godzilla_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, godzilla_VBO);
-	glBufferData(GL_ARRAY_BUFFER, godzilla_n_total_triangles * 3 * n_bytes_per_vertex, godzilla_vertices, GL_STATIC_DRAW);
-
-	// as the geometry data exists now in graphics memory, ...
-	free(godzilla_vertices);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &godzilla_VAO);
-	glBindVertexArray(godzilla_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, godzilla_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_godzilla.ambient_color[0] = 0.24725f;
-	//material_godzilla.ambient_color[1] = 0.1995f;
-	//material_godzilla.ambient_color[2] = 0.0745f;
-	//material_godzilla.ambient_color[3] = 1.0f;
-	//
-	//material_godzilla.diffuse_color[0] = 0.75164f;
-	//material_godzilla.diffuse_color[1] = 0.60648f;
-	//material_godzilla.diffuse_color[2] = 0.22648f;
-	//material_godzilla.diffuse_color[3] = 1.0f;
-	//
-	//material_godzilla.specular_color[0] = 0.728281f;
-	//material_godzilla.specular_color[1] = 0.655802f;
-	//material_godzilla.specular_color[2] = 0.466065f;
-	//material_godzilla.specular_color[3] = 1.0f;
-	//
-	//material_godzilla.specular_exponent = 51.2f;
-	//
-	//material_godzilla.emissive_color[0] = 0.1f;
-	//material_godzilla.emissive_color[1] = 0.1f;
-	//material_godzilla.emissive_color[2] = 0.0f;
-	//material_godzilla.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-void prepare_ironman(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, ironman_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	sprintf(filename, "Data/static_objects/ironman_vnt.geom");
-	ironman_n_triangles = read_geometry(&ironman_vertices, n_bytes_per_triangle, filename);
-	// assume all geometry files are effective
-	ironman_n_total_triangles += ironman_n_triangles;
-
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &ironman_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, ironman_VBO);
-	glBufferData(GL_ARRAY_BUFFER, ironman_n_total_triangles * 3 * n_bytes_per_vertex, ironman_vertices, GL_STATIC_DRAW);
-
-	// as the geometry data exists now in graphics memory, ...
-	free(ironman_vertices);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &ironman_VAO);
-	glBindVertexArray(ironman_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, ironman_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_ironman.ambient_color[0] = 0.24725f;
-	//material_ironman.ambient_color[1] = 0.1995f;
-	//material_ironman.ambient_color[2] = 0.0745f;
-	//material_ironman.ambient_color[3] = 1.0f;
-	//
-	//material_ironman.diffuse_color[0] = 0.75164f;
-	//material_ironman.diffuse_color[1] = 0.60648f;
-	//material_ironman.diffuse_color[2] = 0.22648f;
-	//material_ironman.diffuse_color[3] = 1.0f;
-	//
-	//material_ironman.specular_color[0] = 0.728281f;
-	//material_ironman.specular_color[1] = 0.655802f;
-	//material_ironman.specular_color[2] = 0.466065f;
-	//material_ironman.specular_color[3] = 1.0f;
-	//
-	//material_ironman.specular_exponent = 51.2f;
-	//
-	//material_ironman.emissive_color[0] = 0.1f;
-	//material_ironman.emissive_color[1] = 0.1f;
-	//material_ironman.emissive_color[2] = 0.0f;
-	//material_ironman.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-void prepare_tank(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, tank_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	sprintf(filename, "Data/static_objects/tank_vnt.geom");
-	tank_n_triangles = read_geometry(&tank_vertices, n_bytes_per_triangle, filename);
-	// assume all geometry files are effective
-	tank_n_total_triangles += tank_n_triangles;
-
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &tank_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, tank_VBO);
-	glBufferData(GL_ARRAY_BUFFER, tank_n_total_triangles * 3 * n_bytes_per_vertex, tank_vertices, GL_STATIC_DRAW);
-
-	// as the geometry data exists now in graphics memory, ...
-	free(tank_vertices);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &tank_VAO);
-	glBindVertexArray(tank_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, tank_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_tank.ambient_color[0] = 0.24725f;
-	//material_tank.ambient_color[1] = 0.1995f;
-	//material_tank.ambient_color[2] = 0.0745f;
-	//material_tank.ambient_color[3] = 1.0f;
-	//
-	//material_tank.diffuse_color[0] = 0.75164f;
-	//material_tank.diffuse_color[1] = 0.60648f;
-	//material_tank.diffuse_color[2] = 0.22648f;
-	//material_tank.diffuse_color[3] = 1.0f;
-	//
-	//material_tank.specular_color[0] = 0.728281f;
-	//material_tank.specular_color[1] = 0.655802f;
-	//material_tank.specular_color[2] = 0.466065f;
-	//material_tank.specular_color[3] = 1.0f;
-	//
-	//material_tank.specular_exponent = 51.2f;
-	//
-	//material_tank.emissive_color[0] = 0.1f;
-	//material_tank.emissive_color[1] = 0.1f;
-	//material_tank.emissive_color[2] = 0.0f;
-	//material_tank.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
 
 void set_material_tiger(void) {
 	// assume ShaderProgram_TXPS is used
@@ -1031,58 +530,7 @@ void draw_spider(void) {
 	glDrawArrays(GL_TRIANGLES, spider_vertex_offset[cur_frame_spider], 3 * spider_n_triangles[cur_frame_spider]);
 	glBindVertexArray(0);
 }
-void draw_optimus(void) {
-	glFrontFace(GL_CW);
 
-	glBindVertexArray(optimus_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3 * optimus_n_triangles);
-	glBindVertexArray(0);
-}
-void draw_cow(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(cow_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3 * cow_n_triangles);
-	glBindVertexArray(0);
-}
-void draw_bike(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(bike_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3 * bike_n_triangles);
-	glBindVertexArray(0);
-}
-void draw_bus(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(bus_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3 * bus_n_triangles);
-	glBindVertexArray(0);
-}
-
-void draw_godzilla(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(godzilla_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3 * godzilla_n_triangles);
-	glBindVertexArray(0);
-}
-
-void draw_ironman(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(ironman_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3 * ironman_n_triangles);
-	glBindVertexArray(0);
-}
-
-void draw_tank(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(tank_VAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3 * tank_n_triangles);
-	glBindVertexArray(0);
-}
 // callbacks
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
 
@@ -1193,7 +641,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_optimus();
+	optimus.draw();
 
 	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(100.0f, 30.0f, 10.0f));
 	ModelViewMatrix = glm::rotate(ModelViewMatrix, -90.0f*TO_RADIAN, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -1204,7 +652,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_cow();
+	cow.draw();
 
 	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
@@ -1216,7 +664,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_bike();
+	bike.draw();
 
 	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
@@ -1228,7 +676,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_bus();
+	bus.draw();
 
 	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
@@ -1240,7 +688,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_godzilla();
+	godzilla.draw();
 
 	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
@@ -1252,7 +700,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_ironman();
+	ironman.draw();
 
 	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
@@ -1265,7 +713,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_tank();
+	tank.draw();
 
 
 	glUseProgram(0);
@@ -1591,18 +1039,21 @@ void set_up_scene_lights(void) {
 void prepare_scene(void) {
 	prepare_axes();
 	prepare_floor();
+
 	prepare_tiger();
 	prepare_ben();
 	prepare_wolf();
 	prepare_spider();
+
 	drangon.prepare();
-	prepare_optimus();
-	prepare_cow();
-	prepare_bus();
-	prepare_bike();
-	prepare_godzilla();
-	prepare_ironman();
-	prepare_tank();
+	optimus.prepare();
+	cow.prepare();
+	bus.prepare();
+	bike.prepare();
+	godzilla.prepare();
+	ironman.prepare();
+	tank.prepare();
+
 	set_up_scene_lights();
 }
 

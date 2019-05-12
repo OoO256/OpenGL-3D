@@ -32,13 +32,13 @@ public:
 	char filename_texture[MAX_FILENAME];
 
 	object(char* fv, char* ft);
-	void prepare(void);
-	void draw(void);
+	virtual void prepare(void);
+	virtual void draw(void);
 
 	~object();
 };
 
-object::object(char* fv, char* ft)
+object::object(char* fv, char* ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg")
 {
 	strncpy(filename_vertices, fv, MAX_FILENAME);
 	strncpy(filename_texture, ft, MAX_FILENAME);
