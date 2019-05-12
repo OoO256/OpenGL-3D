@@ -3,26 +3,28 @@
 #include <vector>
 
 class dynamic_object
-	: object
+	: public object
 {
 public:
 	int num_frames;
+	int cur_frame;
 
 	std::vector<int>num_triangles;
 	std::vector<int>vertex_offset;
 	std::vector<GLfloat *>vertices;
 
-	dynamic_object(int num_frames, char* fv, char* ft);
+	dynamic_object(int num_frames, std::string fv, std::string ft);
 	virtual void prepare(void);
 	virtual void draw(void);
 };
 
-dynamic_object::dynamic_object(int num_frames, char* fv, char* ft)
+dynamic_object::dynamic_object(int num_frames, std::string fv, std::string ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg")
 	: object(fv, ft)
 	, num_frames(num_frames)
 	, num_triangles(num_frames)
 	, vertex_offset(num_frames)
 	, vertices(num_frames)
+	, cur_frame(0)
 {
 
 }
@@ -36,7 +38,7 @@ inline void dynamic_object::prepare(void)
 	int n_bytes_per_triangle = 3 * n_bytes_per_vertex;
 
 	for (int i = 0; i < num_frames; i++) {
-		sprintf(filename, filename_vertices, i);
+		sprintf(filename, filename_vertices.c_str(), i);
 		num_triangles[i] = read_geometry(&vertices[i], n_bytes_per_triangle, filename);
 		// assume all geometry files are effective
 		wolf_n_total_triangles += num_triangles[i];
@@ -53,12 +55,12 @@ inline void dynamic_object::prepare(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, wolf_n_total_triangles*n_bytes_per_triangle, NULL, GL_STATIC_DRAW);
 
-	for (i = 0; i < num_frames; i++)
+	for (int i = 0; i < num_frames; i++)
 		glBufferSubData(GL_ARRAY_BUFFER, vertex_offset[i] * n_bytes_per_vertex,
 			num_triangles[i] * n_bytes_per_triangle, vertices[i]);
 
 	// as the geometry data exists now in graphics memory, ...
-	for (i = 0; i < num_frames; i++)
+	for (int i = 0; i < num_frames; i++)
 		free(vertices[i]);
 
 	// initialize vertex array object
@@ -76,34 +78,12 @@ inline void dynamic_object::prepare(void)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	//material_wolf.ambient_color[0] = 0.24725f;
-	//material_wolf.ambient_color[1] = 0.1995f;
-	//material_wolf.ambient_color[2] = 0.0745f;
-	//material_wolf.ambient_color[3] = 1.0f;
-	//
-	//material_wolf.diffuse_color[0] = 0.75164f;
-	//material_wolf.diffuse_color[1] = 0.60648f;
-	//material_wolf.diffuse_color[2] = 0.22648f;
-	//material_wolf.diffuse_color[3] = 1.0f;
-	//
-	//material_wolf.specular_color[0] = 0.728281f;
-	//material_wolf.specular_color[1] = 0.655802f;
-	//material_wolf.specular_color[2] = 0.466065f;
-	//material_wolf.specular_color[3] = 1.0f;
-	//
-	//material_wolf.specular_exponent = 51.2f;
-	//
-	//material_wolf.emissive_color[0] = 0.1f;
-	//material_wolf.emissive_color[1] = 0.1f;
-	//material_wolf.emissive_color[2] = 0.0f;
-	//material_wolf.emissive_color[3] = 1.0f;
-
 	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
 
 	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
 	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
 
-	My_glTexImage2D_from_file(filename_texture);
+	My_glTexImage2D_from_file(&filename_texture[0]);
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -116,4 +96,9 @@ inline void dynamic_object::prepare(void)
 
 inline void dynamic_object::draw(void)
 {
+	glFrontFace(GL_CW);
+
+	glBindVertexArray(vao);
+	glDrawArrays(GL_TRIANGLES, vertex_offset[cur_frame], 3 * num_triangles[cur_frame]);
+	glBindVertexArray(0);
 }

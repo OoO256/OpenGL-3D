@@ -28,22 +28,18 @@ public:
 	Material_Parameters material;
 
 	std::string name;
-	char filename_vertices[MAX_FILENAME];
-	char filename_texture[MAX_FILENAME];
+	std::string filename_vertices;
+	std::string filename_texture;
 
-	object(char* fv, char* ft);
+	object(std::string fv, std::string ft);
 	virtual void prepare(void);
 	virtual void draw(void);
-
-	~object();
 };
 
-object::object(char* fv, char* ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg")
+object::object(std::string fv, std::string ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg")
+	: filename_vertices(fv)
+	, filename_texture(ft)
 {
-	strncpy(filename_vertices, fv, MAX_FILENAME);
-	strncpy(filename_texture, ft, MAX_FILENAME);
-	// sprintf(filename, "Data/static_objects/dragon_vnt.geom");	
-
 }
 
 inline void object::prepare(void)
@@ -53,7 +49,7 @@ inline void object::prepare(void)
 	num_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
 	num_bytes_per_triangle = 3 * num_bytes_per_vertex;
 
-	num_triangles = read_geometry(&vertices, num_bytes_per_triangle, filename_vertices);
+	num_triangles = read_geometry(&vertices, num_bytes_per_triangle, &filename_vertices[0]);
 	// assume all geometry files are effective
 	num_total_triangles += num_triangles;
 
@@ -87,7 +83,7 @@ inline void object::prepare(void)
 	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
 	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
 
-	My_glTexImage2D_from_file(filename_texture);
+	My_glTexImage2D_from_file(&filename_texture[0]);
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 
@@ -104,9 +100,4 @@ inline void object::draw(void) {
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 3 * num_triangles);
 	glBindVertexArray(0);
-}
-
-object::~object()
-{
-
 }

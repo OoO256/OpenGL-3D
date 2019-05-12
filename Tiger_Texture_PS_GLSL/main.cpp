@@ -2,6 +2,7 @@
 #include "axes.h"
 #include "floor.h"
 #include "object.hpp"
+#include "dynamic_object.hpp"
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -76,7 +77,6 @@ int flag_fog;
 // for tiger animation
 unsigned int timestamp_scene = 0; // the global clock in the scene
 int flag_tiger_animation, flag_polygon_fill;
-int cur_frame_tiger = 0, cur_frame_ben = 0, cur_frame_wolf = 0, cur_frame_spider = 0;
 float rotation_angle_tiger = 0.0f;
 
 // my object
@@ -89,43 +89,10 @@ object godzilla("Data/static_objects/godzilla_vnt.geom");
 object ironman("Data/static_objects/ironman_vnt.geom");
 object tank("Data/static_objects/tank_vnt.geom");
 
-
- // tiger object
-#define N_TIGER_FRAMES 12
-GLuint tiger_VBO, tiger_VAO;
-int tiger_n_triangles[N_TIGER_FRAMES];
-int tiger_vertex_offset[N_TIGER_FRAMES];
-GLfloat *tiger_vertices[N_TIGER_FRAMES];
-
-Material_Parameters material_tiger;
-
-// ben object
-#define N_BEN_FRAMES 30
-GLuint ben_VBO, ben_VAO;
-int ben_n_triangles[N_BEN_FRAMES];
-int ben_vertex_offset[N_BEN_FRAMES];
-GLfloat *ben_vertices[N_BEN_FRAMES];
-
-Material_Parameters material_ben;
-
-// wolf object
-#define N_WOLF_FRAMES 17
-GLuint wolf_VBO, wolf_VAO;
-int wolf_n_triangles[N_WOLF_FRAMES];
-int wolf_vertex_offset[N_WOLF_FRAMES];
-GLfloat *wolf_vertices[N_WOLF_FRAMES];
-
-Material_Parameters material_wolf;
-
-// spider object
-#define N_SPIDER_FRAMES 16
-GLuint spider_VBO, spider_VAO;
-int spider_n_triangles[N_SPIDER_FRAMES];
-int spider_vertex_offset[N_SPIDER_FRAMES];
-GLfloat *spider_vertices[N_SPIDER_FRAMES];
-
-Material_Parameters material_spider;
-
+dynamic_object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom");
+dynamic_object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom");
+dynamic_object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom");
+dynamic_object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom");
 
 int read_geometry(GLfloat **object, int bytes_per_primitive, char *filename) {
 	int n_triangles;
@@ -152,383 +119,13 @@ int read_geometry(GLfloat **object, int bytes_per_primitive, char *filename) {
 	return n_triangles;
 }
 
-void prepare_wolf(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, wolf_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	for (i = 0; i < N_WOLF_FRAMES; i++) {
-		sprintf(filename, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom", i);
-		wolf_n_triangles[i] = read_geometry(&wolf_vertices[i], n_bytes_per_triangle, filename);
-		// assume all geometry files are effective
-		wolf_n_total_triangles += wolf_n_triangles[i];
-
-		if (i == 0)
-			wolf_vertex_offset[i] = 0;
-		else
-			wolf_vertex_offset[i] = wolf_vertex_offset[i - 1] + 3 * wolf_n_triangles[i - 1];
-	}
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &wolf_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, wolf_VBO);
-	glBufferData(GL_ARRAY_BUFFER, wolf_n_total_triangles*n_bytes_per_triangle, NULL, GL_STATIC_DRAW);
-
-	for (i = 0; i < N_WOLF_FRAMES; i++)
-		glBufferSubData(GL_ARRAY_BUFFER, wolf_vertex_offset[i] * n_bytes_per_vertex,
-			wolf_n_triangles[i] * n_bytes_per_triangle, wolf_vertices[i]);
-
-	// as the geometry data exists now in graphics memory, ...
-	for (i = 0; i < N_WOLF_FRAMES; i++)
-		free(wolf_vertices[i]);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &wolf_VAO);
-	glBindVertexArray(wolf_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, wolf_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_wolf.ambient_color[0] = 0.24725f;
-	//material_wolf.ambient_color[1] = 0.1995f;
-	//material_wolf.ambient_color[2] = 0.0745f;
-	//material_wolf.ambient_color[3] = 1.0f;
-	//
-	//material_wolf.diffuse_color[0] = 0.75164f;
-	//material_wolf.diffuse_color[1] = 0.60648f;
-	//material_wolf.diffuse_color[2] = 0.22648f;
-	//material_wolf.diffuse_color[3] = 1.0f;
-	//
-	//material_wolf.specular_color[0] = 0.728281f;
-	//material_wolf.specular_color[1] = 0.655802f;
-	//material_wolf.specular_color[2] = 0.466065f;
-	//material_wolf.specular_color[3] = 1.0f;
-	//
-	//material_wolf.specular_exponent = 51.2f;
-	//
-	//material_wolf.emissive_color[0] = 0.1f;
-	//material_wolf.emissive_color[1] = 0.1f;
-	//material_wolf.emissive_color[2] = 0.0f;
-	//material_wolf.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-void prepare_ben(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, ben_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	for (i = 0; i < N_BEN_FRAMES; i++) {
-		sprintf(filename, "Data/dynamic_objects/ben/ben_vn%d%d.geom", i / 10, i % 10);
-		ben_n_triangles[i] = read_geometry(&ben_vertices[i], n_bytes_per_triangle, filename);
-		// assume all geometry files are effective
-		ben_n_total_triangles += ben_n_triangles[i];
-
-		if (i == 0)
-			ben_vertex_offset[i] = 0;
-		else
-			ben_vertex_offset[i] = ben_vertex_offset[i - 1] + 3 * ben_n_triangles[i - 1];
-	}
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &ben_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, ben_VBO);
-	glBufferData(GL_ARRAY_BUFFER, ben_n_total_triangles*n_bytes_per_triangle, NULL, GL_STATIC_DRAW);
-
-	for (i = 0; i < N_BEN_FRAMES; i++)
-		glBufferSubData(GL_ARRAY_BUFFER, ben_vertex_offset[i] * n_bytes_per_vertex,
-			ben_n_triangles[i] * n_bytes_per_triangle, ben_vertices[i]);
-
-	// as the geometry data exists now in graphics memory, ...
-	for (i = 0; i < N_BEN_FRAMES; i++)
-		free(ben_vertices[i]);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &ben_VAO);
-	glBindVertexArray(ben_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, ben_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_ben.ambient_color[0] = 0.24725f;
-	//material_ben.ambient_color[1] = 0.1995f;
-	//material_ben.ambient_color[2] = 0.0745f;
-	//material_ben.ambient_color[3] = 1.0f;
-	//
-	//material_ben.diffuse_color[0] = 0.75164f;
-	//material_ben.diffuse_color[1] = 0.60648f;
-	//material_ben.diffuse_color[2] = 0.22648f;
-	//material_ben.diffuse_color[3] = 1.0f;
-	//
-	//material_ben.specular_color[0] = 0.728281f;
-	//material_ben.specular_color[1] = 0.655802f;
-	//material_ben.specular_color[2] = 0.466065f;
-	//material_ben.specular_color[3] = 1.0f;
-	//
-	//material_ben.specular_exponent = 51.2f;
-	//
-	//material_ben.emissive_color[0] = 0.1f;
-	//material_ben.emissive_color[1] = 0.1f;
-	//material_ben.emissive_color[2] = 0.0f;
-	//material_ben.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-void prepare_spider(void) {
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, spider_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	for (i = 0; i < N_SPIDER_FRAMES; i++) {
-		sprintf(filename, "Data/dynamic_objects/spider/spider_vnt_%d%d.geom", i / 10, i % 10);
-		spider_n_triangles[i] = read_geometry(&spider_vertices[i], n_bytes_per_triangle, filename);
-		// assume all geometry files are effective
-		spider_n_total_triangles += spider_n_triangles[i];
-
-		if (i == 0)
-			spider_vertex_offset[i] = 0;
-		else
-			spider_vertex_offset[i] = spider_vertex_offset[i - 1] + 3 * spider_n_triangles[i - 1];
-	}
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &spider_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, spider_VBO);
-	glBufferData(GL_ARRAY_BUFFER, spider_n_total_triangles*n_bytes_per_triangle, NULL, GL_STATIC_DRAW);
-
-	for (i = 0; i < N_SPIDER_FRAMES; i++)
-		glBufferSubData(GL_ARRAY_BUFFER, spider_vertex_offset[i] * n_bytes_per_vertex,
-			spider_n_triangles[i] * n_bytes_per_triangle, spider_vertices[i]);
-
-	// as the geometry data exists now in graphics memory, ...
-	for (i = 0; i < N_SPIDER_FRAMES; i++)
-		free(spider_vertices[i]);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &spider_VAO);
-	glBindVertexArray(spider_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, spider_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	//material_spider.ambient_color[0] = 0.24725f;
-	//material_spider.ambient_color[1] = 0.1995f;
-	//material_spider.ambient_color[2] = 0.0745f;
-	//material_spider.ambient_color[3] = 1.0f;
-	//
-	//material_spider.diffuse_color[0] = 0.75164f;
-	//material_spider.diffuse_color[1] = 0.60648f;
-	//material_spider.diffuse_color[2] = 0.22648f;
-	//material_spider.diffuse_color[3] = 1.0f;
-	//
-	//material_spider.specular_color[0] = 0.728281f;
-	//material_spider.specular_color[1] = 0.655802f;
-	//material_spider.specular_color[2] = 0.466065f;
-	//material_spider.specular_color[3] = 1.0f;
-	//
-	//material_spider.specular_exponent = 51.2f;
-	//
-	//material_spider.emissive_color[0] = 0.1f;
-	//material_spider.emissive_color[1] = 0.1f;
-	//material_spider.emissive_color[2] = 0.0f;
-	//material_spider.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-void prepare_tiger(void) { // vertices enumerated clockwise
-	int i, n_bytes_per_vertex, n_bytes_per_triangle, tiger_n_total_triangles = 0;
-	char filename[512];
-
-	n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	n_bytes_per_triangle = 3 * n_bytes_per_vertex;
-
-	for (i = 0; i < N_TIGER_FRAMES; i++) {
-		sprintf(filename, "Data/dynamic_objects/tiger/Tiger_%d%d_triangles_vnt.geom", i / 10, i % 10);
-		tiger_n_triangles[i] = read_geometry(&tiger_vertices[i], n_bytes_per_triangle, filename);
-		// assume all geometry files are effective
-		tiger_n_total_triangles += tiger_n_triangles[i];
-
-		if (i == 0)
-			tiger_vertex_offset[i] = 0;
-		else
-			tiger_vertex_offset[i] = tiger_vertex_offset[i - 1] + 3 * tiger_n_triangles[i - 1];
-	}
-
-	// initialize vertex buffer object
-	glGenBuffers(1, &tiger_VBO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, tiger_VBO);
-	glBufferData(GL_ARRAY_BUFFER, tiger_n_total_triangles*n_bytes_per_triangle, NULL, GL_STATIC_DRAW);
-
-	for (i = 0; i < N_TIGER_FRAMES; i++)
-		glBufferSubData(GL_ARRAY_BUFFER, tiger_vertex_offset[i] * n_bytes_per_vertex,
-		tiger_n_triangles[i] * n_bytes_per_triangle, tiger_vertices[i]);
-
-	// as the geometry data exists now in graphics memory, ...
-	for (i = 0; i < N_TIGER_FRAMES; i++)
-		free(tiger_vertices[i]);
-
-	// initialize vertex array object
-	glGenVertexArrays(1, &tiger_VAO);
-	glBindVertexArray(tiger_VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, tiger_VBO);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	material_tiger.ambient_color[0] = 0.24725f;
-	material_tiger.ambient_color[1] = 0.1995f;
-	material_tiger.ambient_color[2] = 0.0745f;
-	material_tiger.ambient_color[3] = 1.0f;
-
-	material_tiger.diffuse_color[0] = 0.75164f;
-	material_tiger.diffuse_color[1] = 0.60648f;
-	material_tiger.diffuse_color[2] = 0.22648f;
-	material_tiger.diffuse_color[3] = 1.0f;
-
-	material_tiger.specular_color[0] = 0.728281f;
-	material_tiger.specular_color[1] = 0.655802f;
-	material_tiger.specular_color[2] = 0.466065f;
-	material_tiger.specular_color[3] = 1.0f;
-
-	material_tiger.specular_exponent = 51.2f;
-
-	material_tiger.emissive_color[0] = 0.1f;
-	material_tiger.emissive_color[1] = 0.1f;
-	material_tiger.emissive_color[2] = 0.0f;
-	material_tiger.emissive_color[3] = 1.0f;
-
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
-
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
-
-	My_glTexImage2D_from_file("Data/dynamic_objects/tiger/tiger_tex2.jpg");
-
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-
 void set_material_tiger(void) {
 	// assume ShaderProgram_TXPS is used
-	glUniform4fv(loc_material.ambient_color, 1, material_tiger.ambient_color);
-	glUniform4fv(loc_material.diffuse_color, 1, material_tiger.diffuse_color);
-	glUniform4fv(loc_material.specular_color, 1, material_tiger.specular_color);
-	glUniform1f(loc_material.specular_exponent, material_tiger.specular_exponent);
-	glUniform4fv(loc_material.emissive_color, 1, material_tiger.emissive_color);
-}
-
-void draw_tiger(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(tiger_VAO);
-	glDrawArrays(GL_TRIANGLES, tiger_vertex_offset[cur_frame_tiger], 3 * tiger_n_triangles[cur_frame_tiger]);
-	glBindVertexArray(0);
-}
-void draw_ben(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(ben_VAO);
-	glDrawArrays(GL_TRIANGLES, ben_vertex_offset[cur_frame_ben], 3 * ben_n_triangles[cur_frame_ben]);
-	glBindVertexArray(0);
-}
-void draw_wolf(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(wolf_VAO);
-	glDrawArrays(GL_TRIANGLES, wolf_vertex_offset[cur_frame_wolf], 3 * wolf_n_triangles[cur_frame_wolf]);
-	glBindVertexArray(0);
-}
-void draw_spider(void) {
-	glFrontFace(GL_CW);
-
-	glBindVertexArray(spider_VAO);
-	glDrawArrays(GL_TRIANGLES, spider_vertex_offset[cur_frame_spider], 3 * spider_n_triangles[cur_frame_spider]);
-	glBindVertexArray(0);
+	glUniform4fv(loc_material.ambient_color, 1, tiger.material.ambient_color);
+	glUniform4fv(loc_material.diffuse_color, 1, tiger.material.diffuse_color);
+	glUniform4fv(loc_material.specular_color, 1, tiger.material.specular_color);
+	glUniform1f(loc_material.specular_exponent, tiger.material.specular_exponent);
+	glUniform4fv(loc_material.emissive_color, 1, tiger.material.emissive_color);
 }
 
 // callbacks
@@ -570,7 +167,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_tiger();
+	tiger.draw();
 
 	glUseProgram(h_ShaderProgram_simple);
 	ModelViewProjectionMatrix = glm::scale(ModelViewProjectionMatrix, glm::vec3(20.0f, 20.0f, 20.0f));
@@ -588,7 +185,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_ben();
+	ben.draw();
 	
 	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
@@ -600,7 +197,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_wolf();
+	wolf.draw();
 
 	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
@@ -612,7 +209,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	draw_spider();
+	spider.draw();
 
 	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
@@ -723,10 +320,10 @@ void display(void) {
 
 void timer_scene(int value) {
 	timestamp_scene = (timestamp_scene + 1) % UINT_MAX;
-	cur_frame_tiger = timestamp_scene % N_TIGER_FRAMES;
-	cur_frame_ben = timestamp_scene % N_BEN_FRAMES;
-	cur_frame_wolf= timestamp_scene % N_WOLF_FRAMES;
-	cur_frame_spider = timestamp_scene % N_SPIDER_FRAMES;
+	tiger.cur_frame = timestamp_scene % tiger.num_frames;
+	ben.cur_frame = timestamp_scene % ben.num_frames;
+	wolf.cur_frame = timestamp_scene % wolf.num_frames;
+	spider.cur_frame = timestamp_scene % spider.num_frames;
 	rotation_angle_tiger = (timestamp_scene % 360)*TO_RADIAN;
 	glutPostRedisplay();
 	if (flag_tiger_animation)
@@ -1039,11 +636,34 @@ void set_up_scene_lights(void) {
 void prepare_scene(void) {
 	prepare_axes();
 	prepare_floor();
+	
 
-	prepare_tiger();
-	prepare_ben();
-	prepare_wolf();
-	prepare_spider();
+	tiger.material.ambient_color[0] = 0.24725f;
+	tiger.material.ambient_color[1] = 0.1995f;
+	tiger.material.ambient_color[2] = 0.0745f;
+	tiger.material.ambient_color[3] = 1.0f;
+
+	tiger.material.diffuse_color[0] = 0.75164f;
+	tiger.material.diffuse_color[1] = 0.60648f;
+	tiger.material.diffuse_color[2] = 0.22648f;
+	tiger.material.diffuse_color[3] = 1.0f;
+
+	tiger.material.specular_color[0] = 0.728281f;
+	tiger.material.specular_color[1] = 0.655802f;
+	tiger.material.specular_color[2] = 0.466065f;
+	tiger.material.specular_color[3] = 1.0f;
+
+	tiger.material.specular_exponent = 51.2f;
+
+	tiger.material.emissive_color[0] = 0.1f;
+	tiger.material.emissive_color[1] = 0.1f;
+	tiger.material.emissive_color[2] = 0.0f;
+	tiger.material.emissive_color[3] = 1.0f;
+
+	tiger.prepare();
+	ben.prepare();
+	wolf.prepare();
+	spider.prepare();
 
 	drangon.prepare();
 	optimus.prepare();
