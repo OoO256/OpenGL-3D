@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include <algorithm>
-#include <vector>
 #include <string>
 #include <cstring>
 
@@ -20,11 +19,12 @@ constexpr int MAX_FILENAME = 512;
 
 class object
 {
+private:
+	GLfloat *vertices;
+	int num_triangles;
+
 public:
 	GLuint vbo, vao;
-	int num_triangles;
-	GLfloat *vertices;
-
 	Material_Parameters material;
 
 	std::string name;
