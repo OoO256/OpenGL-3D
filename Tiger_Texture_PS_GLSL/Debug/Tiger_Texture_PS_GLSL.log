@@ -1,25 +1,111 @@
 ﻿  main.cpp
 c:\usr\local\opengl\include\freeimage\freeimage.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\object.hpp(19): error C2065: 'object': 선언되지 않은 식별자입니다.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\object.hpp(19): error C2059: 구문 오류: '>'
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\object.hpp(19): error C2062: 예기치 않은 'unknown-type' 형식입니다.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\object.hpp(45): error C2065: 'objects': 선언되지 않은 식별자입니다.
 c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\dynamic_object.hpp(41): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(102): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(951): error C2528: 'pointer': 참조에 대한 포인터가 잘못되었습니다.
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(903): note: 컴파일 중인 클래스 템플릿 인스턴스화 'std::allocator<_Ty>'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=object &
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(360): note: 컴파일 중인 클래스 템플릿 인스턴스화 'std::allocator_traits<_Alloc>'에 대한 참조를 확인하세요.
+          with
+          [
+              _Alloc=std::allocator<object &>
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(360): note: 컴파일 중인 별칭 템플릿 인스턴스화 'std::_Rebind_alloc_t<std::allocator<_Ty>,_Ty>'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=object &
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(405): note: 컴파일 중인 클래스 템플릿 인스턴스화 'std::_Vec_base_types<_Ty,_Alloc>'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=object &,
+              _Alloc=std::allocator<object &>
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(626): note: 컴파일 중인 클래스 템플릿 인스턴스화 'std::_Vector_alloc<std::_Vec_base_types<_Ty,_Alloc>>'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=object &,
+              _Alloc=std::allocator<object &>
+          ]
+  c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(85): note: 컴파일 중인 클래스 템플릿 인스턴스화 'std::vector<object &,std::allocator<_Ty>>'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=object &
+          ]
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(952): error C2528: 'const_pointer': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(970): error C2528: 'address': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(975): error C2528: 'address': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(989): error C2528: '_Ptr': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(996): error C2528: 'allocate': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(1002): error C2528: 'allocate': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(840): error C2528: 'abstract declarator': 참조에 대한 포인터가 잘못되었습니다.
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(905): note: 컴파일 중인 클래스 템플릿 인스턴스화 'std::_Default_allocator_traits<_Alloc>'에 대한 참조를 확인하세요.
+          with
+          [
+              _Alloc=std::allocator<object &>
+          ]
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(841): error C2528: 'abstract declarator': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(860): error C2528: '<template-parameter>': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(866): error C2528: '<template-parameter>': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(923): error C2528: 'abstract declarator': 참조에 대한 포인터가 잘못되었습니다.
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(363): note: 컴파일되는 변수 템플릿 'const bool _Is_simple_alloc_v<std::allocator<object &> >'에 대한 참조를 확인하세요.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(923): error C2528: '<template-parameter>': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(924): error C2528: 'abstract declarator': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(924): error C2528: '<template-parameter>': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(371): error C2528: '<template-parameter>': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(934): error C2528: 'abstract declarator': 참조에 대한 포인터가 잘못되었습니다.
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(411): note: 컴파일 중인 클래스 템플릿 인스턴스화 'std::_Simple_types<_Ty>'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=object &
+          ]
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(935): error C2528: 'abstract declarator': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(936): error C2535: 'void std::vector<object &,std::allocator<_Ty>>::push_back(_Ty)': 멤버 함수를 이미 정의했거나 선언했습니다.
+          with
+          [
+              _Ty=object &
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(930): note: 'std::vector<object &,std::allocator<_Ty>>::push_back' 선언을 참조하십시오.
+          with
+          [
+              _Ty=object &
+          ]
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(1024): error C2535: 'std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_Ty>>> std::vector<_Ty,std::allocator<_Ty>>::insert(std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,_Ty)': 멤버 함수를 이미 정의했거나 선언했습니다.
+          with
+          [
+              _Ty=object &
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(1018): note: 'std::vector<object &,std::allocator<_Ty>>::insert' 선언을 참조하십시오.
+          with
+          [
+              _Ty=object &
+          ]
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(1608): error C2528: 'data': 참조에 대한 포인터가 잘못되었습니다.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(1613): error C2528: 'data': 참조에 대한 포인터가 잘못되었습니다.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(105): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(207): note: 'fopen' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(480): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(483): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(482): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(485): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(484): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(487): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(486): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(489): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(488): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(491): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(490): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(493): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(492): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(495): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(494): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(497): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(496): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\4.0.1.3d_objects_anim_19\tiger_texture_ps_glsl\main.cpp(499): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-  Tiger_Texture_PS_GLSL.vcxproj -> C:\Users\admin\Desktop\GR\4.0.1.3D_Objects_Anim_19\Debug\Tiger_Texture_PS_GLSL.exe

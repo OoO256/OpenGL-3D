@@ -1,3 +1,5 @@
+#include <vector>
+
 #include "main.h"
 #include "axes.h"
 #include "floor.h"
@@ -80,6 +82,7 @@ int flag_tiger_animation, flag_polygon_fill;
 float rotation_angle_tiger = 0.0f;
 
 // my object
+std::vector<object&>objects;
 object drangon("Data/static_objects/dragon_vnt.geom");
 object optimus("Data/static_objects/optimus_vnt.geom");
 object cow("Data/static_objects/cow_vn.geom");
@@ -634,6 +637,20 @@ void set_up_scene_lights(void) {
 }
 
 void prepare_scene(void) {
+	objects.emplace_back(tiger);
+	objects.emplace_back(ben);
+	objects.emplace_back(wolf);
+	objects.emplace_back(spider);
+
+	objects.emplace_back(drangon);
+	objects.emplace_back(optimus);
+	objects.emplace_back(cow);
+	objects.emplace_back(bike);
+	objects.emplace_back(bus);
+	objects.emplace_back(godzilla);
+	objects.emplace_back(ironman);
+	objects.emplace_back(tank);
+
 	prepare_axes();
 	prepare_floor();
 	

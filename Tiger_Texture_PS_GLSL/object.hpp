@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <string>
 #include <cstring>
+#include <vector>
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -27,6 +28,12 @@ public:
 	GLuint vbo, vao;
 	Material_Parameters material;
 
+	glm::vec3 position;
+	glm::vec3 velocity;
+	glm::vec3 acceleration;
+	glm::vec3 scale;
+	glm::vec3 rotate;
+
 	std::string name;
 	std::string filename_vertices;
 	std::string filename_texture;
@@ -34,12 +41,26 @@ public:
 	object(std::string fv, std::string ft);
 	virtual void prepare(void);
 	virtual void draw(void);
+
+
+	glm::mat4 genModelMatrix();
 };
 
-object::object(std::string fv, std::string ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg")
+object::object
+(
+	std::string fv
+	, std::string ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg"
+	//, glm::vec3 position
+)
 	: filename_vertices(fv)
 	, filename_texture(ft)
+	, position(position)
+	, velocity(0)
+	, acceleration(0)
+	, scale(1)
+	, rotate(0)
 {
+
 }
 
 inline void object::prepare(void)
@@ -100,4 +121,39 @@ inline void object::draw(void) {
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 3 * num_triangles);
 	glBindVertexArray(0);
+}
+
+glm::mat4 object::genModelMatrix()
+{
+	glm::mat4 ModelMatrix(1.0f);
+
+	ModelMatrix = glm::translate(
+		ModelMatrix,
+		this->position
+	);
+	
+	ModelMatrix = glm::rotate(
+		ModelMatrix,
+		this->rotate.x,
+		glm::vec3(1.0f, 0.0f, 0.0f)
+	);
+
+	ModelMatrix = glm::rotate(
+		ModelMatrix,
+		this->rotate.y,
+		glm::vec3(0.0f, 1.0f, 0.0f)
+	);
+
+	ModelMatrix = glm::rotate(
+		ModelMatrix,
+		this->rotate.z,
+		glm::vec3(0.0f, 0.0f, 1.0f)
+	);
+
+	ModelMatrix = glm::scale(
+		ModelMatrix,
+		this->scale
+	);
+
+	return ModelMatrix;
 }
