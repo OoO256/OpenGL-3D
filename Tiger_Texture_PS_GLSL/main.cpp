@@ -82,7 +82,7 @@ int flag_tiger_animation, flag_polygon_fill;
 float rotation_angle_tiger = 0.0f;
 
 // my object
-std::vector<object&>objects;
+std::vector<object *>objects;
 object drangon("Data/static_objects/dragon_vnt.geom");
 object optimus("Data/static_objects/optimus_vnt.geom");
 object cow("Data/static_objects/cow_vn.geom");
@@ -158,7 +158,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
 	draw_floor();
-	
+
  	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
  	ModelViewMatrix = glm::rotate(ViewMatrix, -rotation_angle_tiger, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -176,58 +176,21 @@ void display(void) {
 	ModelViewProjectionMatrix = glm::scale(ModelViewProjectionMatrix, glm::vec3(20.0f, 20.0f, 20.0f));
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_simple, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_axes();
-
-	glUseProgram(h_ShaderProgram_TXPS);
-	set_material_tiger();
-	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
-	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(0.0f, 0.0f, 50.0f));
-	ModelViewMatrix = glm::scale(ModelViewMatrix, glm::vec3(100.0f, -100.0f, -100.0f));
-	ModelViewProjectionMatrix = ProjectionMatrix * ModelViewMatrix;
-	ModelViewMatrixInvTrans = glm::inverseTranspose(glm::mat3(ModelViewMatrix));
-
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
-	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	ben.draw();
 	
-	set_material_tiger();
-	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
-	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(60.0f, 0.0f, 0.0f));
-	ModelViewMatrix = glm::scale(ModelViewMatrix, glm::vec3(100.0f, 100.0f,100.0f));
-	ModelViewProjectionMatrix = ProjectionMatrix * ModelViewMatrix;
-	ModelViewMatrixInvTrans = glm::inverseTranspose(glm::mat3(ModelViewMatrix));
 
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
-	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	wolf.draw();
+	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
 
-	set_material_tiger();
-	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
-	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(0.0f, 0.0f, -50.0f));
-	ModelViewMatrix = glm::scale(ModelViewMatrix, glm::vec3(50.0f, -50.0f, 50.0f));
-	ModelViewProjectionMatrix = ProjectionMatrix * ModelViewMatrix;
-	ModelViewMatrixInvTrans = glm::inverseTranspose(glm::mat3(ModelViewMatrix));
+	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
 
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
-	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	spider.draw();
+	spider.scale = glm::vec3(50.0f, -50.0f, 50.0f);
 
-	set_material_tiger();
-	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
-	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
-	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(-50.0f, 50.0f, 20.0f));
-	ModelViewMatrix = glm::rotate(ModelViewMatrix, -90.0f*TO_RADIAN, glm::vec3(0.0f, 1.0f, 0.0f));
-	ModelViewMatrix = glm::rotate(ModelViewMatrix, -90.0f*TO_RADIAN, glm::vec3(1.0f, 0.0f, 0.0f));
-	ModelViewMatrix = glm::scale(ModelViewMatrix, glm::vec3(3.0f, 3.0f, 3.0f));
-	ModelViewProjectionMatrix = ProjectionMatrix * ModelViewMatrix;
-	ModelViewMatrixInvTrans = glm::inverseTranspose(glm::mat3(ModelViewMatrix));
+	drangon.rotate = glm::vec3(-90.0f*TO_RADIAN, -90.0f*TO_RADIAN, 0);
+	drangon.scale = glm::vec3(3.0f, 3.0f, 3.0f);
 
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
-	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-	drangon.draw();
+	optimus.rotate = glm::vec3(-90.0f*TO_RADIAN, -90.0f*TO_RADIAN, 0);
+	optimus.scale = glm::vec3(0.1f, 0.1f, 0.1f);
+
+	/*
 
 	set_material_tiger();
 	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
@@ -314,7 +277,32 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
 	tank.draw();
+	*/
 
+
+
+
+
+	int obj_cnt = 0;
+
+	glUseProgram(h_ShaderProgram_TXPS);
+	for (auto& obj : objects)
+	{
+		obj->position.x = 300.0f * cos(TO_RADIAN*30* obj_cnt);
+		obj->position.z = 300.0f * sin(TO_RADIAN*30* obj_cnt);
+		obj_cnt++;
+		
+		set_material_tiger();
+		glUniform1i(loc_texture, TEXTURE_ID_TIGER);
+		ModelViewMatrix = ViewMatrix * obj->getModelMatrix();
+		ModelViewProjectionMatrix = ProjectionMatrix * ModelViewMatrix;
+		ModelViewMatrixInvTrans = glm::inverseTranspose(glm::mat3(ModelViewMatrix));
+
+		glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+		glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
+		glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
+		obj->draw();
+	}
 
 	glUseProgram(0);
 
@@ -637,19 +625,19 @@ void set_up_scene_lights(void) {
 }
 
 void prepare_scene(void) {
-	objects.emplace_back(tiger);
-	objects.emplace_back(ben);
-	objects.emplace_back(wolf);
-	objects.emplace_back(spider);
+	objects.emplace_back(&tiger);
+	objects.emplace_back(&ben);
+	objects.emplace_back(&wolf);
+	objects.emplace_back(&spider);
 
-	objects.emplace_back(drangon);
-	objects.emplace_back(optimus);
-	objects.emplace_back(cow);
-	objects.emplace_back(bike);
-	objects.emplace_back(bus);
-	objects.emplace_back(godzilla);
-	objects.emplace_back(ironman);
-	objects.emplace_back(tank);
+	objects.emplace_back(&drangon);
+	objects.emplace_back(&optimus);
+	objects.emplace_back(&cow);
+	objects.emplace_back(&bike);
+	objects.emplace_back(&bus);
+	objects.emplace_back(&godzilla);
+	objects.emplace_back(&ironman);
+	objects.emplace_back(&tank);
 
 	prepare_axes();
 	prepare_floor();
