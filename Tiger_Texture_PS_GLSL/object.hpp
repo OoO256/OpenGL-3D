@@ -10,7 +10,8 @@
 #include <FreeImage/FreeImage.h>
 #include "Shaders/LoadShaders.h"
 #include "My_Shading.h"
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp> //translate, rotate, scale, lookAt, perspective, etc.
+#include <glm/gtc/matrix_inverse.hpp> // inverseTranspose, etc.
 
 
 #include "main.h"
@@ -23,7 +24,13 @@ constexpr Material_Parameters tiger_material = {
 	{ 0.728281f, 0.655802f, 0.466065f, 1.0f },
 	{ 0.1f, 0.1f, 0.0f, 1.0f },
 	51.2f
-}
+};
+
+extern loc_Material_Parameters loc_material;
+extern GLint loc_ModelViewProjectionMatrix_TXPS, loc_ModelViewMatrix_TXPS, loc_ModelViewMatrixInvTrans_TXPS;
+extern GLint loc_texture, loc_flag_texture_mapping, loc_flag_fog;
+
+
 
 class object
 {
@@ -47,7 +54,7 @@ public:
 
 	object(std::string fv, std::string ft, glm::vec3 position, Material_Parameters material);
 	virtual void prepare(void);
-	virtual void draw(void);
+	virtual void draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix);
 
 
 	glm::mat4 getModelMatrix();
@@ -125,7 +132,24 @@ inline void object::prepare(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
-inline void object::draw(void) {
+inline void object::draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix) {
+	glUniform4fv(loc_material.ambient_color, 1, material.ambient_color);
+	glUniform4fv(loc_material.diffuse_color, 1, material.diffuse_color);
+	glUniform4fv(loc_material.specular_color, 1, material.specular_color);
+	glUniform1f(loc_material.specular_exponent, material.specular_exponent);
+	glUniform4fv(loc_material.emissive_color, 1, material.emissive_color);
+	// set colors
+
+	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
+	auto ModelViewMatrix = ViewMatrix * getModelMatrix();
+	auto ModelViewProjectionMatrix = ProjectionMatrix * ModelViewMatrix;
+	auto ModelViewMatrixInvTrans = glm::inverseTranspose(glm::mat3(ModelViewMatrix));
+
+	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
+	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
+
+
 	glFrontFace(GL_CW);
 
 	glBindVertexArray(vao);

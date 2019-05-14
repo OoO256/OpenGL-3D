@@ -15,7 +15,7 @@ public:
 
 	dynamic_object(int num_frames, std::string fv, std::string ft);
 	virtual void prepare(void);
-	virtual void draw(void);
+	virtual void draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix);
 };
 
 dynamic_object::dynamic_object(int num_frames, std::string fv, std::string ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg")
@@ -94,8 +94,26 @@ inline void dynamic_object::prepare(void)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
-inline void dynamic_object::draw(void)
+inline void dynamic_object::draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix)
 {
+	glUniform4fv(loc_material.ambient_color, 1, material.ambient_color);
+	glUniform4fv(loc_material.diffuse_color, 1, material.diffuse_color);
+	glUniform4fv(loc_material.specular_color, 1, material.specular_color);
+	glUniform1f(loc_material.specular_exponent, material.specular_exponent);
+	glUniform4fv(loc_material.emissive_color, 1, material.emissive_color);
+	// set colors
+
+	glUniform1i(loc_texture, TEXTURE_ID_TIGER);
+	auto ModelViewMatrix = ViewMatrix * getModelMatrix();
+	auto ModelViewProjectionMatrix = ProjectionMatrix * ModelViewMatrix;
+	auto ModelViewMatrixInvTrans = glm::inverseTranspose(glm::mat3(ModelViewMatrix));
+
+	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
+	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
+
+
+
 	glFrontFace(GL_CW);
 
 	glBindVertexArray(vao);

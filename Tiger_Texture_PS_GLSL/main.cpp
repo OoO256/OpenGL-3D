@@ -122,41 +122,6 @@ int read_geometry(GLfloat **object, int bytes_per_primitive, char *filename) {
 	return n_triangles;
 }
 
-void set_material_tiger(void) {
-	Material_Parameters;
-
-
-
-	// assume ShaderProgram_TXPS is used
-	glUniform4fv(loc_material.ambient_color, 1, tiger.material.ambient_color);
-	glUniform4fv(loc_material.diffuse_color, 1, tiger.material.diffuse_color);
-	glUniform4fv(loc_material.specular_color, 1, tiger.material.specular_color);
-	glUniform1f(loc_material.specular_exponent, tiger.material.specular_exponent);
-	glUniform4fv(loc_material.emissive_color, 1, tiger.material.emissive_color);
-
-	tiger.material.ambient_color[0] = 0.24725f;
-	tiger.material.ambient_color[1] = 0.1995f;
-	tiger.material.ambient_color[2] = 0.0745f;
-	tiger.material.ambient_color[3] = 1.0f;
-
-	tiger.material.diffuse_color[0] = 0.75164f;
-	tiger.material.diffuse_color[1] = 0.60648f;
-	tiger.material.diffuse_color[2] = 0.22648f;
-	tiger.material.diffuse_color[3] = 1.0f;
-
-	tiger.material.specular_color[0] = 0.728281f;
-	tiger.material.specular_color[1] = 0.655802f;
-	tiger.material.specular_color[2] = 0.466065f;
-	tiger.material.specular_color[3] = 1.0f;
-
-	tiger.material.specular_exponent = 51.2f;
-
-	tiger.material.emissive_color[0] = 0.1f;
-	tiger.material.emissive_color[1] = 0.1f;
-	tiger.material.emissive_color[2] = 0.0f;
-	tiger.material.emissive_color[3] = 1.0f;
-}
-
 // callbacks
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
 
@@ -201,16 +166,7 @@ void display(void) {
 		obj->position.z = 300.0f * sin(TO_RADIAN*30* obj_cnt);
 		obj_cnt++;
 		
-		set_material_tiger();
-		glUniform1i(loc_texture, TEXTURE_ID_TIGER);
-		ModelViewMatrix = ViewMatrix * obj->getModelMatrix();
-		ModelViewProjectionMatrix = ProjectionMatrix * ModelViewMatrix;
-		ModelViewMatrixInvTrans = glm::inverseTranspose(glm::mat3(ModelViewMatrix));
-
-		glUniformMatrix4fv(loc_ModelViewProjectionMatrix_TXPS, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-		glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
-		glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
-		obj->draw();
+		obj->draw(ViewMatrix, ProjectionMatrix);
 	}
 
 	glUseProgram(0);
@@ -573,29 +529,6 @@ void prepare_scene(void) {
 
 	prepare_axes();
 	prepare_floor();
-	
-
-	tiger.material.ambient_color[0] = 0.24725f;
-	tiger.material.ambient_color[1] = 0.1995f;
-	tiger.material.ambient_color[2] = 0.0745f;
-	tiger.material.ambient_color[3] = 1.0f;
-
-	tiger.material.diffuse_color[0] = 0.75164f;
-	tiger.material.diffuse_color[1] = 0.60648f;
-	tiger.material.diffuse_color[2] = 0.22648f;
-	tiger.material.diffuse_color[3] = 1.0f;
-
-	tiger.material.specular_color[0] = 0.728281f;
-	tiger.material.specular_color[1] = 0.655802f;
-	tiger.material.specular_color[2] = 0.466065f;
-	tiger.material.specular_color[3] = 1.0f;
-
-	tiger.material.specular_exponent = 51.2f;
-
-	tiger.material.emissive_color[0] = 0.1f;
-	tiger.material.emissive_color[1] = 0.1f;
-	tiger.material.emissive_color[2] = 0.0f;
-	tiger.material.emissive_color[3] = 1.0f;
 
 	for (auto& obj : objects)
 	{
