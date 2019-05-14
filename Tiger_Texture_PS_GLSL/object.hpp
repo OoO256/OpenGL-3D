@@ -38,19 +38,20 @@ public:
 	std::string filename_vertices;
 	std::string filename_texture;
 
-	object(std::string fv, std::string ft);
+	object(std::string fv, std::string ft, glm::vec3 position);
 	virtual void prepare(void);
 	virtual void draw(void);
 
 
-	glm::mat4 genModelMatrix();
+	glm::mat4 getModelMatrix();
+	glm::mat4 getModelViewMatrix(glm::mat4 ViewMatrix);
 };
 
 object::object
 (
 	std::string fv
 	, std::string ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg"
-	//, glm::vec3 position
+	, glm::vec3 position = glm::vec3(0.0f)
 )
 	: filename_vertices(fv)
 	, filename_texture(ft)
@@ -123,7 +124,7 @@ inline void object::draw(void) {
 	glBindVertexArray(0);
 }
 
-glm::mat4 object::genModelMatrix()
+glm::mat4 object::getModelMatrix()
 {
 	glm::mat4 ModelMatrix(1.0f);
 
@@ -156,4 +157,42 @@ glm::mat4 object::genModelMatrix()
 	);
 
 	return ModelMatrix;
+}
+
+inline glm::mat4 object::getModelViewMatrix
+(
+	glm::mat4 ViewMatrix
+)
+{
+	glm::mat4 ModelViewMatrix(1.0f);
+
+	ModelViewMatrix = glm::translate(
+		ViewMatrix,
+		this->position
+	);
+	/*
+	ModelViewMatrix = glm::rotate(
+		ModelViewMatrix,
+		this->rotate.x,
+		glm::vec3(1.0f, 0.0f, 0.0f)
+	);
+
+	ModelViewMatrix = glm::rotate(
+		ModelViewMatrix,
+		this->rotate.y,
+		glm::vec3(0.0f, 1.0f, 0.0f)
+	);
+
+	ModelViewMatrix = glm::rotate(
+		ModelViewMatrix,
+		this->rotate.z,
+		glm::vec3(0.0f, 0.0f, 1.0f)
+	);
+
+	ModelViewMatrix = glm::scale(
+		ModelViewMatrix,
+		this->scale
+	);
+	*/
+	return ModelViewMatrix;
 }
