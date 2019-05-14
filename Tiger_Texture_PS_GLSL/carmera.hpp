@@ -27,7 +27,7 @@ struct spherical_coordinate
 spherical_coordinate rect_to_spher(const glm::vec3& pos) {
 	spherical_coordinate ret;
 	ret.radius = sqrt(pos.x*pos.x+ pos.y*pos.y+ pos.z*pos.z);
-	ret.angle1 = acos(pos.z / ret.radius);
+	ret.angle1 = atan2(pos.z, pos.x);
 	ret.angle2 = atan2(pos.y, pos.x);
 
 	return ret;
@@ -36,9 +36,9 @@ spherical_coordinate rect_to_spher(const glm::vec3& pos) {
 
 glm::vec3 spher_to_rect(const spherical_coordinate& s) {
 	return {
-		s.radius*sin(s.angle1)*cos(s.angle2),
-		s.radius*sin(s.angle1)*sin(s.angle2),
-		s.radius*cos(s.angle1)
+		s.radius*cos(s.angle2)*cos(s.angle1),
+		s.radius*sin(s.angle2),
+		s.radius*cos(s.angle2)*sin(s.angle1)
 	};
 }
 
@@ -71,10 +71,6 @@ inline carmera::carmera(glm::vec3 pos)
 	, up(0, 1, 0)
 {
 	spher = rect_to_spher(pos);
-
-	co[0][0] = 0;	co[0][1] = 1;	co[0][2] = 0;
-	co[1][0] = 0;	co[1][1] = 0;	co[1][2] = 1;
-	co[2][0] = 1;	co[2][1] = 0;	co[2][2] = 0;
 }
 
 inline carmera::carmera(float radius, float angle1, float angle2)

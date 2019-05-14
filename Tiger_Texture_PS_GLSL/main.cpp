@@ -282,7 +282,15 @@ void keyboard(unsigned char key, int x, int y) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glutPostRedisplay();
 		break;
-
+	case 'x':
+		cam1.pos = { 1000, 0, 0 };
+		break;
+	case 'y':
+		cam1.pos = { 0, 1000, 0 };
+		break;
+	case 'z':
+		cam1.pos = { 0, 0, 1000 };
+		break;
 	case 27: // ESC key
 		glutLeaveMainLoop(); // Incur destuction callback for cleanups
 		break;
@@ -296,19 +304,19 @@ void special_keyboard(int key, int x, int y) {
 	{
 	case GLUT_KEY_UP:
 		//do something here
-		cam1.move(0, -0.1, 0);
+		cam1.move(0, 0, 0.1);
 		break;
 	case GLUT_KEY_DOWN:
 		//do something here
-		cam1.move(0, 0.1, 0);
+		cam1.move(0, 0, -0.1);
 		break;
 	case GLUT_KEY_LEFT:
 		//do something here
-		cam1.move(0, 0, -0.1);
+		cam1.move(0, 0.1, 0);
 		break;
 	case GLUT_KEY_RIGHT:
 		//do something here
-		cam1.move(0, 0, 0.1);
+		cam1.move(0, -0.1, 0);
 		break;
 	default:
 		break;
