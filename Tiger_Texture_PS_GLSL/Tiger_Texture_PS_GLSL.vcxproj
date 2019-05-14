@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="axes.h" />
+    <ClInclude Include="carmera.hpp" />
     <ClInclude Include="dynamic_object.hpp" />
     <ClInclude Include="floor.h" />
     <ClInclude Include="main.h" />

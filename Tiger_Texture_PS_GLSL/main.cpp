@@ -5,6 +5,7 @@
 #include "floor.h"
 #include "object.hpp"
 #include "dynamic_object.hpp"
+#include "carmera.hpp"
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -125,7 +126,11 @@ int read_geometry(GLfloat **object, int bytes_per_primitive, char *filename) {
 // callbacks
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
 
+carmera cam1(1000, 1000, 1000);
+
 void display(void) {
+	ViewMatrix = cam1.getView();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glUseProgram(h_ShaderProgram_simple);
@@ -188,6 +193,8 @@ void timer_scene(int value) {
 
 
 void keyboard(unsigned char key, int x, int y) {
+	printf("%d\n", key);
+
 	static int flag_cull_face = 0;
 	static int PRP_distance_level = 4;
 
@@ -275,8 +282,35 @@ void keyboard(unsigned char key, int x, int y) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glutPostRedisplay();
 		break;
+
 	case 27: // ESC key
 		glutLeaveMainLoop(); // Incur destuction callback for cleanups
+		break;
+	}
+}
+
+void special_keyboard(int key, int x, int y) {
+	printf("special key entered : %d\n", key);
+
+	switch (key)
+	{
+	case GLUT_KEY_UP:
+		//do something here
+		cam1.move(0, -0.1, 0);
+		break;
+	case GLUT_KEY_DOWN:
+		//do something here
+		cam1.move(0, 0.1, 0);
+		break;
+	case GLUT_KEY_LEFT:
+		//do something here
+		cam1.move(0, 0, -0.1);
+		break;
+	case GLUT_KEY_RIGHT:
+		//do something here
+		cam1.move(0, 0, 0.1);
+		break;
+	default:
 		break;
 	}
 }
@@ -306,6 +340,8 @@ void register_callbacks(void) {
 	glutReshapeFunc(reshape);
 	glutTimerFunc(100, timer_scene, 0);
 	glutCloseFunc(cleanup);
+
+	glutSpecialFunc(special_keyboard);
 }
 
 void prepare_shader_program(void) {
