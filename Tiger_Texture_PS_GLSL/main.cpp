@@ -123,12 +123,38 @@ int read_geometry(GLfloat **object, int bytes_per_primitive, char *filename) {
 }
 
 void set_material_tiger(void) {
+	Material_Parameters;
+
+
+
 	// assume ShaderProgram_TXPS is used
 	glUniform4fv(loc_material.ambient_color, 1, tiger.material.ambient_color);
 	glUniform4fv(loc_material.diffuse_color, 1, tiger.material.diffuse_color);
 	glUniform4fv(loc_material.specular_color, 1, tiger.material.specular_color);
 	glUniform1f(loc_material.specular_exponent, tiger.material.specular_exponent);
 	glUniform4fv(loc_material.emissive_color, 1, tiger.material.emissive_color);
+
+	tiger.material.ambient_color[0] = 0.24725f;
+	tiger.material.ambient_color[1] = 0.1995f;
+	tiger.material.ambient_color[2] = 0.0745f;
+	tiger.material.ambient_color[3] = 1.0f;
+
+	tiger.material.diffuse_color[0] = 0.75164f;
+	tiger.material.diffuse_color[1] = 0.60648f;
+	tiger.material.diffuse_color[2] = 0.22648f;
+	tiger.material.diffuse_color[3] = 1.0f;
+
+	tiger.material.specular_color[0] = 0.728281f;
+	tiger.material.specular_color[1] = 0.655802f;
+	tiger.material.specular_color[2] = 0.466065f;
+	tiger.material.specular_color[3] = 1.0f;
+
+	tiger.material.specular_exponent = 51.2f;
+
+	tiger.material.emissive_color[0] = 0.1f;
+	tiger.material.emissive_color[1] = 0.1f;
+	tiger.material.emissive_color[2] = 0.0f;
+	tiger.material.emissive_color[3] = 1.0f;
 }
 
 // callbacks
@@ -507,7 +533,7 @@ void set_up_scene_lights(void) {
 	glUseProgram(0);
 }
 
-void prepare_scene(void) {
+void init_objects(void) {
 	tiger.rotate = glm::vec3(-90.0f*TO_RADIAN, 0, 0);
 	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
 	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
@@ -540,6 +566,10 @@ void prepare_scene(void) {
 	objects.emplace_back(&godzilla);
 	objects.emplace_back(&ironman);
 	objects.emplace_back(&tank);
+}
+
+void prepare_scene(void) {
+	init_objects();
 
 	prepare_axes();
 	prepare_floor();
