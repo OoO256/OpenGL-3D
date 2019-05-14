@@ -17,6 +17,13 @@
 
 extern GLuint texture_names[N_TEXTURES_USED];
 constexpr int MAX_FILENAME = 512;
+constexpr Material_Parameters tiger_material = {
+	{ 0.24725f, 0.1995f, 0.0745f, 1.0f },
+	{ 0.75164f, 0.60648f, 0.22648f, 1.0f },
+	{ 0.728281f, 0.655802f, 0.466065f, 1.0f },
+	{ 0.1f, 0.1f, 0.0f, 1.0f },
+	51.2f
+}
 
 class object
 {
@@ -38,7 +45,7 @@ public:
 	std::string filename_vertices;
 	std::string filename_texture;
 
-	object(std::string fv, std::string ft, glm::vec3 position);
+	object(std::string fv, std::string ft, glm::vec3 position, Material_Parameters material);
 	virtual void prepare(void);
 	virtual void draw(void);
 
@@ -52,6 +59,7 @@ object::object
 	std::string fv
 	, std::string ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg"
 	, glm::vec3 position = glm::vec3(0.0f)
+	, Material_Parameters material = tiger_material
 )
 	: filename_vertices(fv)
 	, filename_texture(ft)
@@ -60,6 +68,7 @@ object::object
 	, acceleration(0)
 	, scale(1)
 	, rotate(0)
+	, material(material)
 {
 
 }
