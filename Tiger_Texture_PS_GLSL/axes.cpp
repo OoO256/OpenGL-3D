@@ -1,5 +1,4 @@
 #include "axes.h"
-#include "main.h"
 
 // axes object
 GLuint axes_VBO, axes_VAO;

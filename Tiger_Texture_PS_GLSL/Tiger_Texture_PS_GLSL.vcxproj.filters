@@ -41,9 +41,6 @@
     <ClInclude Include="main.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="dynamic_object.hpp">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="axes.h">
       <Filter>소스 파일</Filter>
     </ClInclude>

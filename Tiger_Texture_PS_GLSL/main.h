@@ -17,8 +17,8 @@ constexpr float TO_DEGREE = 57.295779513f;
 #define LOC_TEXCOORD 2
 
 // texture stuffs
-constexpr int N_TEXTURES_USED = 2;
-constexpr int TEXTURE_ID_FLOOR = 0;
-constexpr int TEXTURE_ID_TIGER = 1;
+#define N_TEXTURES_USED 2
+#define TEXTURE_ID_FLOOR 0
+#define TEXTURE_ID_TIGER 1
 
 void My_glTexImage2D_from_file(char *filename);

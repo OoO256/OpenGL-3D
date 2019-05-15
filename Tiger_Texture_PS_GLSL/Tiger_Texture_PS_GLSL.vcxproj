@@ -14,7 +14,7 @@
     <ProjectGuid>{FA135248-705D-4803-828F-F3D3E695C965}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Tiger_Texture_PS_GLSL</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,11 +42,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)OpenGLFiles\header;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.17763.0\ucrt;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)OpenGLFiles\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.17763.0\ucrt;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -93,7 +94,6 @@
   <ItemGroup>
     <ClInclude Include="axes.h" />
     <ClInclude Include="carmera.hpp" />
-    <ClInclude Include="dynamic_object.hpp" />
     <ClInclude Include="floor.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="My_Shading.h" />

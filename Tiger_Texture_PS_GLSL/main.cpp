@@ -84,19 +84,19 @@ float rotation_angle_tiger = 0.0f;
 
 // my object
 std::vector<object *>objects;
-object drangon("Data/static_objects/dragon_vnt.geom");
-object optimus("Data/static_objects/optimus_vnt.geom");
-object cow("Data/static_objects/cow_vn.geom");
-object bike("Data/static_objects/bike_vnt.geom");
-object bus("Data/static_objects/bus_vnt.geom");
-object godzilla("Data/static_objects/godzilla_vnt.geom");
-object ironman("Data/static_objects/ironman_vnt.geom");
+object drangon(1, "Data/static_objects/dragon_vnt.geom");
+object optimus(1, "Data/static_objects/optimus_vnt.geom");
+object cow(1, "Data/static_objects/cow_vn.geom");
+object bike(1, "Data/static_objects/bike_vnt.geom");
+object bus(1, "Data/static_objects/bus_vnt.geom");
+object godzilla(1, "Data/static_objects/godzilla_vnt.geom");
+object ironman(1, "Data/static_objects/ironman_vnt.geom");
+object tank(1, "Data/static_objects/tank_vnt.geom");
 
-dynamic_object tank(1, "Data/static_objects/tank_vnt.geom");
-dynamic_object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom");
-dynamic_object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom");
-dynamic_object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom");
-dynamic_object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom");
+object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom");
+object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom");
+object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom");
+object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom");
 
 // callbacks
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
