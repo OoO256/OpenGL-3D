@@ -36,13 +36,13 @@ extern GLint loc_ModelViewProjectionMatrix_TXPS, loc_ModelViewMatrix_TXPS, loc_M
 extern GLint loc_texture, loc_flag_texture_mapping, loc_flag_fog;
 
 // codes for the 'general' triangular-mesh object
-enum GEOM_OBJ_TYPE { GEOM_OBJ_TYPE_V = 0, GEOM_OBJ_TYPE_VN, GEOM_OBJ_TYPE_VNT };
+enum OBJ_TYPE { TYPE_V = 0, TYPE_VN, TYPE_VNT };
 // GEOM_OBJ_TYPE_V: (x, y, z)
 // GEOM_OBJ_TYPE_VN: (x, y, z, nx, ny, nz)
 // GEOM_OBJ_TYPE_VNT: (x, y, z, nx, ny, nz, s, t)
 constexpr int elements_per_vertex[3] = { 3, 6, 8 };
 
-int read_geometry_file(GLfloat **object, GEOM_OBJ_TYPE obj_type, char *filename) {
+int read_geometry_file_binary(GLfloat **object, OBJ_TYPE obj_type, char *filename) {
 	int n_triangles;
 	FILE *fp;
 
@@ -67,13 +67,44 @@ int read_geometry_file(GLfloat **object, GEOM_OBJ_TYPE obj_type, char *filename)
 	return n_triangles;
 }
 
+int read_geometry_file_txt(GLfloat **object, OBJ_TYPE obj_type, char *filename) {
+	int n_triangles;
+	FILE *fp;
+
+	// fprintf(stdout, "Reading geometry from the geometry file %s...\n", filename);
+	fp = fopen(filename, "r");
+	if (fp == NULL) {
+		fprintf(stderr, "Cannot open the object file %s ...", filename);
+		return -1;
+	}
+
+	fscanf(fp, "%d", &n_triangles);
+	*object = (float *)malloc(n_triangles * 3 * elements_per_vertex[obj_type] * sizeof(float));
+	if (*object == NULL) {
+		fprintf(stderr, "Cannot allocate memory for the geometry file %s ...", filename);
+		return -1;
+	}
+
+	// fprintf(stdout, "Read %d primitives successfully.\n\n", n_triangles);
+	for (size_t i = 0; i < n_triangles * 3 * elements_per_vertex[obj_type]; i++)
+	{
+		fscanf(fp, "%f", *object + i);
+	}
+
+	fclose(fp);
+
+	return n_triangles;
+}
+
+
 
 class object
 {
 public:
+
 	GLuint vbo, vao;
 	Material_Parameters material;
-	GEOM_OBJ_TYPE elem_type;
+	OBJ_TYPE type;
 
 	glm::vec3 position;
 	glm::vec3 velocity;
@@ -91,8 +122,9 @@ public:
 	std::string filename_vertices;
 	std::string filename_texture;
 	bool is_texture_on;
+	bool is_binary_file;
 
-	object(int num_frames, std::string fv, std::string ft);
+	object(int num_frames, std::string fv, OBJ_TYPE type, std::string ft);
 	virtual void prepare(void);
 	virtual void draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix);
 	~object();
@@ -105,10 +137,12 @@ object::object
 (
 	int num_frames
 	, std::string fv
+	, OBJ_TYPE type
 	, std::string ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg"
 )
 	: num_frames(num_frames)
 	, filename_vertices(fv)
+	, type(type)
 	, filename_texture(ft)
 	, position(0)
 	, material(tiger_material)
@@ -116,12 +150,12 @@ object::object
 	, acceleration(0)
 	, scale(1)
 	, rotate(0)
-	, elem_type(GEOM_OBJ_TYPE_VNT)
 	, num_triangles(num_frames)
 	, vertex_offset(num_frames)
 	, vertices(num_frames)
 	, cur_frame(0)
 	, is_texture_on(true)
+	, is_binary_file(true)
 {
 
 }
@@ -138,12 +172,21 @@ inline void object::prepare(void)
 	int num_total_triangles = 0;
 	char filename[512];
 
-	int bytes_per_vertex = elements_per_vertex[elem_type] * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
+	int bytes_per_vertex = elements_per_vertex[type] * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
 	int bytes_per_triangle = 3 * bytes_per_vertex;
 
 	for (int i = 0; i < num_frames; i++) {
 		sprintf(filename, filename_vertices.c_str(), i);
-		num_triangles[i] = read_geometry_file(&vertices[i], elem_type, filename);
+
+		if (is_binary_file) {
+			num_triangles[i] = read_geometry_file_binary(&vertices[i], type, filename);
+		}
+		else
+		{
+			num_triangles[i] = read_geometry_file_txt(&vertices[i], type, filename);
+		}
+
+
 		// assume all geometry files are effective
 		num_total_triangles += num_triangles[i];
 
@@ -172,18 +215,18 @@ inline void object::prepare(void)
 
 	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, bytes_per_vertex, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(0);
-	if (elem_type >= GEOM_OBJ_TYPE_VN) {
+	if (type >= TYPE_VN) {
 		glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
 	}
-	if (elem_type >= GEOM_OBJ_TYPE_VNT) {
+	if (type >= TYPE_VNT) {
 		glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
 		glEnableVertexAttribArray(2);
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	if (is_texture_on) {
+	if (true) {
 		glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
 
 		glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);

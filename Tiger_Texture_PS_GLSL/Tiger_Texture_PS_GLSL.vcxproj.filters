@@ -50,6 +50,9 @@
     <ClInclude Include="carmera.hpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="car.hpp">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Phong_Tx.frag">

@@ -83,22 +83,22 @@ float rotation_angle_tiger = 0.0f;
 
 // my object
 std::vector<object *>objects;
-object drangon(1, "Data/static_objects/dragon_vnt.geom");
-object optimus(1, "Data/static_objects/optimus_vnt.geom");
-object cow(1, "Data/static_objects/cow_vn.geom");
-object bike(1, "Data/static_objects/bike_vnt.geom");
-object bus(1, "Data/static_objects/bus_vnt.geom");
-object godzilla(1, "Data/static_objects/godzilla_vnt.geom");
-object ironman(1, "Data/static_objects/ironman_vnt.geom");
-object tank(1, "Data/static_objects/tank_vnt.geom");
+object drangon(1, "Data/static_objects/dragon_vnt.geom", TYPE_VNT);
+object optimus(1, "Data/static_objects/optimus_vnt.geom", TYPE_VNT);
+object cow(1, "Data/static_objects/cow_vn.geom", TYPE_VNT);
+object bike(1, "Data/static_objects/bike_vnt.geom", TYPE_VNT);
+object bus(1, "Data/static_objects/bus_vnt.geom", TYPE_VNT);
+object godzilla(1, "Data/static_objects/godzilla_vnt.geom", TYPE_VNT);
+object ironman(1, "Data/static_objects/ironman_vnt.geom", TYPE_VNT);
+object tank(1, "Data/static_objects/tank_vnt.geom", TYPE_VNT);
 
-object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom");
-object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom");
-object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom");
-object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom");
+object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom", TYPE_VNT);
+object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom", TYPE_VNT);
+object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom", TYPE_VNT);
+object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom", TYPE_VNT);
 
 
-object cow2(1, "Data/static_objects/cow_triangles_v.txt");
+object cow2(1, "Data/static_objects/txtdata/cow_triangles_v.txt", TYPE_V);
 
 // callbacks
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
@@ -509,11 +509,6 @@ void set_up_scene_lights(void) {
 }
 
 void init_objects(void) {
-
-
-
-
-
 	tiger.rotate = glm::vec3(-90.0f*TO_RADIAN, 0, 0);
 	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
 	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
@@ -534,7 +529,8 @@ void init_objects(void) {
 
 	cow2.position = { 0, 200, 0 };
 	cow2.scale = glm::vec3(100, 100, 100);
-	cow2.elem_type = GEOM_OBJ_TYPE_V;
+	cow2.type = TYPE_V;
+	cow2.is_binary_file = false;
 
 	objects.emplace_back(&tiger);
 	objects.emplace_back(&ben);
@@ -549,6 +545,8 @@ void init_objects(void) {
 	objects.emplace_back(&godzilla);
 	objects.emplace_back(&ironman);
 	objects.emplace_back(&tank);
+
+
 	objects.emplace_back(&cow2);
 }
 

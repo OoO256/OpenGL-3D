@@ -93,6 +93,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="axes.h" />
+    <ClInclude Include="car.hpp" />
     <ClInclude Include="carmera.hpp" />
     <ClInclude Include="floor.h" />
     <ClInclude Include="main.h" />
