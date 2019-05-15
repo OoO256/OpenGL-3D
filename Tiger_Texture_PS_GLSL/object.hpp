@@ -40,7 +40,7 @@ enum GEOM_OBJ_TYPE { GEOM_OBJ_TYPE_V = 0, GEOM_OBJ_TYPE_VN, GEOM_OBJ_TYPE_VNT };
 // GEOM_OBJ_TYPE_V: (x, y, z)
 // GEOM_OBJ_TYPE_VN: (x, y, z, nx, ny, nz)
 // GEOM_OBJ_TYPE_VNT: (x, y, z, nx, ny, nz, s, t)
-constexpr int ELEMENTS_PER_VERTEX[3] = { 3, 6, 8 };
+constexpr int elements_per_vertex[3] = { 3, 6, 8 };
 
 int read_geometry_file(GLfloat **object, GEOM_OBJ_TYPE obj_type, char *filename) {
 	int n_triangles;
@@ -54,13 +54,13 @@ int read_geometry_file(GLfloat **object, GEOM_OBJ_TYPE obj_type, char *filename)
 	}
 
 	fread(&n_triangles, sizeof(int), 1, fp);
-	*object = (float *)malloc(n_triangles * 3 * ELEMENTS_PER_VERTEX[obj_type] * sizeof(float));
+	*object = (float *)malloc(n_triangles * 3 * elements_per_vertex[obj_type] * sizeof(float));
 	if (*object == NULL) {
 		fprintf(stderr, "Cannot allocate memory for the geometry file %s ...", filename);
 		return -1;
 	}
 
-	fread(*object, 3 * ELEMENTS_PER_VERTEX[obj_type] * sizeof(float), n_triangles, fp);
+	fread(*object, 3 * elements_per_vertex[obj_type] * sizeof(float), n_triangles, fp);
 	// fprintf(stdout, "Read %d primitives successfully.\n\n", n_triangles);
 	fclose(fp);
 
@@ -73,7 +73,7 @@ class object
 public:
 	GLuint vbo, vao;
 	Material_Parameters material;
-	GEOM_OBJ_TYPE obj_type;
+	GEOM_OBJ_TYPE elem_type;
 
 	glm::vec3 position;
 	glm::vec3 velocity;
@@ -90,10 +90,12 @@ public:
 	std::string name;
 	std::string filename_vertices;
 	std::string filename_texture;
+	bool is_texture_on;
 
 	object(int num_frames, std::string fv, std::string ft);
 	virtual void prepare(void);
 	virtual void draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix);
+	~object();
 
 
 	glm::mat4 getModelMatrix();
@@ -114,13 +116,21 @@ object::object
 	, acceleration(0)
 	, scale(1)
 	, rotate(0)
-	, obj_type(GEOM_OBJ_TYPE_VNT)
+	, elem_type(GEOM_OBJ_TYPE_VNT)
 	, num_triangles(num_frames)
 	, vertex_offset(num_frames)
 	, vertices(num_frames)
 	, cur_frame(0)
+	, is_texture_on(true)
 {
 
+}
+
+
+inline object::~object()
+{
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
 }
 
 inline void object::prepare(void)
@@ -128,12 +138,12 @@ inline void object::prepare(void)
 	int num_total_triangles = 0;
 	char filename[512];
 
-	int n_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
-	int n_bytes_per_triangle = 3 * n_bytes_per_vertex;
+	int bytes_per_vertex = elements_per_vertex[elem_type] * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
+	int bytes_per_triangle = 3 * bytes_per_vertex;
 
 	for (int i = 0; i < num_frames; i++) {
 		sprintf(filename, filename_vertices.c_str(), i);
-		num_triangles[i] = read_geometry_file(&vertices[i], obj_type, filename);
+		num_triangles[i] = read_geometry_file(&vertices[i], elem_type, filename);
 		// assume all geometry files are effective
 		num_total_triangles += num_triangles[i];
 
@@ -143,52 +153,56 @@ inline void object::prepare(void)
 			vertex_offset[i] = vertex_offset[i - 1] + 3 * num_triangles[i - 1];
 	}
 
-	// initialize vertex buffer object
-	glGenBuffers(1, &vbo);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, num_total_triangles*n_bytes_per_triangle, NULL, GL_STATIC_DRAW);
-
-	for (int i = 0; i < num_frames; i++)
-		glBufferSubData(GL_ARRAY_BUFFER, vertex_offset[i] * n_bytes_per_vertex,
-			num_triangles[i] * n_bytes_per_triangle, vertices[i]);
-
-	// as the geometry data exists now in graphics memory, ...
-	for (int i = 0; i < num_frames; i++)
-		free(vertices[i]);
-
 	// initialize vertex array object
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
+	// initialize vertex buffer object
+	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(0));
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, n_bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glBufferData(GL_ARRAY_BUFFER, num_total_triangles*bytes_per_triangle, NULL, GL_STATIC_DRAW);
 
+	for (int i = 0; i < num_frames; i++)
+		glBufferSubData(GL_ARRAY_BUFFER, vertex_offset[i] * bytes_per_vertex,
+			num_triangles[i] * bytes_per_triangle, vertices[i]);
+
+	// as the geometry data exists now in graphics memory, ...
+	for (int i = 0; i < num_frames; i++)
+		free(vertices[i]);	
+
+	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, bytes_per_vertex, BUFFER_OFFSET(0));
+	glEnableVertexAttribArray(0);
+	if (elem_type >= GEOM_OBJ_TYPE_VN) {
+		glVertexAttribPointer(LOC_NORMAL, 3, GL_FLOAT, GL_FALSE, bytes_per_vertex, BUFFER_OFFSET(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+	}
+	if (elem_type >= GEOM_OBJ_TYPE_VNT) {
+		glVertexAttribPointer(LOC_TEXCOORD, 2, GL_FLOAT, GL_FALSE, bytes_per_vertex, BUFFER_OFFSET(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
+	if (is_texture_on) {
+		glHint(GL_GENERATE_MIPMAP_HINT, GL_NICEST);
 
-	glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
-	glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
+		glActiveTexture(GL_TEXTURE0 + TEXTURE_ID_TIGER);
+		glBindTexture(GL_TEXTURE_2D, texture_names[TEXTURE_ID_TIGER]);
 
-	My_glTexImage2D_from_file(&filename_texture[0]);
+		My_glTexImage2D_from_file(&filename_texture[0]);
 
-	glGenerateMipmap(GL_TEXTURE_2D);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
 }
 
 inline void object::draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix) {
+
 	glUniform4fv(loc_material.ambient_color, 1, material.ambient_color);
 	glUniform4fv(loc_material.diffuse_color, 1, material.diffuse_color);
 	glUniform4fv(loc_material.specular_color, 1, material.specular_color);

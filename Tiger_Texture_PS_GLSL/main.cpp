@@ -4,7 +4,6 @@
 #include "axes.h"
 #include "floor.h"
 #include "object.hpp"
-#include "dynamic_object.hpp"
 #include "carmera.hpp"
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -97,6 +96,9 @@ object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom");
 object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom");
 object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom");
 object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom");
+
+
+object cow2(1, "Data/static_objects/cow_triangles_v.txt");
 
 // callbacks
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
@@ -507,6 +509,11 @@ void set_up_scene_lights(void) {
 }
 
 void init_objects(void) {
+
+
+
+
+
 	tiger.rotate = glm::vec3(-90.0f*TO_RADIAN, 0, 0);
 	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
 	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
@@ -525,6 +532,9 @@ void init_objects(void) {
 	tank.scale = glm::vec3(10.0f, 10.0f, 10.0f);
 	tank.rotate = glm::vec3(-90.0f*TO_RADIAN, 0, 0);
 
+	cow2.position = { 0, 200, 0 };
+	cow2.scale = glm::vec3(100, 100, 100);
+	cow2.elem_type = GEOM_OBJ_TYPE_V;
 
 	objects.emplace_back(&tiger);
 	objects.emplace_back(&ben);
@@ -539,6 +549,7 @@ void init_objects(void) {
 	objects.emplace_back(&godzilla);
 	objects.emplace_back(&ironman);
 	objects.emplace_back(&tank);
+	objects.emplace_back(&cow2);
 }
 
 void prepare_scene(void) {
