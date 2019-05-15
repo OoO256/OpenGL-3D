@@ -79,7 +79,7 @@ int flag_fog;
 
 // for tiger animation
 unsigned int timestamp_scene = 0; // the global clock in the scene
-int flag_tiger_animation, flag_polygon_fill;
+int is_time_running, flag_polygon_fill;
 float rotation_angle_tiger = 0.0f;
 
 // my object
@@ -185,15 +185,15 @@ void timer_scene(int value) {
 	ben.cur_frame = timestamp_scene % ben.num_frames;
 	wolf.cur_frame = timestamp_scene % wolf.num_frames;
 	spider.cur_frame = timestamp_scene % spider.num_frames;
-	rotation_angle_tiger = (timestamp_scene % 360)*TO_RADIAN;
+	//rotation_angle_tiger = (timestamp_scene % 360)*TO_RADIAN;
 	glutPostRedisplay();
-	if (flag_tiger_animation)
+	if (is_time_running)
 		glutTimerFunc(10, timer_scene, 0);
 }
 
 
 void keyboard(unsigned char key, int x, int y) {
-	printf("%d\n", key);
+	printf("key : %d\n", key);
 
 	static int flag_cull_face = 0;
 	static int PRP_distance_level = 4;
@@ -215,8 +215,8 @@ void keyboard(unsigned char key, int x, int y) {
 
 	switch (key) {
 	case 'a': // toggle the animation effect.
-		flag_tiger_animation = 1 - flag_tiger_animation;
-		if (flag_tiger_animation) {
+		is_time_running = 1 - is_time_running;
+		if (is_time_running) {
 			glutTimerFunc(100, timer_scene, 0);
 			fprintf(stdout, "^^^ Animation mode ON.\n");
 		}
@@ -282,14 +282,11 @@ void keyboard(unsigned char key, int x, int y) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		glutPostRedisplay();
 		break;
-	case 'x':
-		cam1.pos = { 1000, 0, 0 };
+	case 44:
+		cam1.move(-10, 0, 0);
 		break;
-	case 'y':
-		cam1.pos = { 0, 1000, 0 };
-		break;
-	case 'z':
-		cam1.pos = { 0, 0, 1000 };
+	case 46:
+		cam1.move(10, 0, 0);
 		break;
 	case 27: // ESC key
 		glutLeaveMainLoop(); // Incur destuction callback for cleanups
@@ -443,7 +440,7 @@ void initialize_lights_and_material(void) { // follow OpenGL conventions for ini
 }
 
 void initialize_flags(void) {
-	flag_tiger_animation = 1;
+	is_time_running = 1;
 	flag_polygon_fill = 1;
 	flag_texture_mapping = 1;
 	flag_fog = 0;
@@ -538,7 +535,7 @@ void init_objects(void) {
 	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
 	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
 	spider.scale = glm::vec3(50.0f, -50.0f, 50.0f);
-	drangon.rotate = glm::vec3(-90.0f*TO_RADIAN, -90.0f*TO_RADIAN, 0);
+	drangon.rotate = glm::vec3(0*TO_RADIAN, 0*TO_RADIAN, 0 * TO_RADIAN);
 	drangon.scale = glm::vec3(3.0f, 3.0f, 3.0f);
 	optimus.rotate = glm::vec3(-90.0f*TO_RADIAN, -90.0f*TO_RADIAN, 0);
 	optimus.scale = glm::vec3(0.1f, 0.1f, 0.1f);

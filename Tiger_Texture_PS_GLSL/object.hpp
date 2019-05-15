@@ -204,7 +204,7 @@ inline glm::mat4 object::getModelViewMatrix
 		ViewMatrix,
 		this->position
 	);
-	/*
+
 	ModelViewMatrix = glm::rotate(
 		ModelViewMatrix,
 		this->rotate.x,
@@ -227,6 +227,6 @@ inline glm::mat4 object::getModelViewMatrix
 		ModelViewMatrix,
 		this->scale
 	);
-	*/
+
 	return ModelViewMatrix;
 }

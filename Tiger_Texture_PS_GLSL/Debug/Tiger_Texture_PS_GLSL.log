@@ -4,27 +4,27 @@ c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\dynamic_object.h
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
 c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(106): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(207): note: 'fopen' 선언을 참조하십시오.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(307): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(311): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(315): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(319): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(380): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(304): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(308): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(312): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(316): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(377): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(382): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(379): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(384): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(381): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(386): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(383): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(388): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(385): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(390): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(387): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(392): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(389): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(394): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(391): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
-c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(396): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\sogang-pc\desktop\work\opengl-3d\tiger_texture_ps_glsl\main.cpp(393): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\stdio.h(1769): note: 'sprintf' 선언을 참조하십시오.
   Tiger_Texture_PS_GLSL.vcxproj -> C:\Users\sogang-pc\Desktop\Work\OpenGL-3D\Debug\Tiger_Texture_PS_GLSL.exe
   Tiger_Texture_PS_GLSL.vcxproj -> C:\Users\sogang-pc\Desktop\Work\OpenGL-3D\Debug\Tiger_Texture_PS_GLSL.pdb (Partial PDB)
