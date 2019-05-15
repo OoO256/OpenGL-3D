@@ -6,7 +6,7 @@ class dynamic_object
 	: public object
 {
 public:
-	int num_frames;
+	const int num_frames;
 	int cur_frame;
 
 	std::vector<int>num_triangles;
@@ -39,7 +39,7 @@ inline void dynamic_object::prepare(void)
 
 	for (int i = 0; i < num_frames; i++) {
 		sprintf(filename, filename_vertices.c_str(), i);
-		num_triangles[i] = read_geometry(&vertices[i], n_bytes_per_triangle, filename);
+		num_triangles[i] = read_geometry(&vertices[i], obj_type, filename);
 		// assume all geometry files are effective
 		wolf_n_total_triangles += num_triangles[i];
 

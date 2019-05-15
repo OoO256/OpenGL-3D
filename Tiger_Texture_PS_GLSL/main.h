@@ -22,4 +22,3 @@ constexpr int TEXTURE_ID_FLOOR = 0;
 constexpr int TEXTURE_ID_TIGER = 1;
 
 void My_glTexImage2D_from_file(char *filename);
-int read_geometry(GLfloat **object, int bytes_per_primitive, char *filename);

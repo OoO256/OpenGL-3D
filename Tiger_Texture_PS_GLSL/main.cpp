@@ -91,37 +91,12 @@ object bike("Data/static_objects/bike_vnt.geom");
 object bus("Data/static_objects/bus_vnt.geom");
 object godzilla("Data/static_objects/godzilla_vnt.geom");
 object ironman("Data/static_objects/ironman_vnt.geom");
-object tank("Data/static_objects/tank_vnt.geom");
 
+dynamic_object tank(1, "Data/static_objects/tank_vnt.geom");
 dynamic_object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom");
 dynamic_object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom");
 dynamic_object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom");
 dynamic_object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom");
-
-int read_geometry(GLfloat **object, int bytes_per_primitive, char *filename) {
-	int n_triangles;
-	FILE *fp;
-
-	// fprintf(stdout, "Reading geometry from the geometry file %s...\n", filename);
-	fp = fopen(filename, "rb");
-	if (fp == NULL){
-		fprintf(stderr, "Cannot open the object file %s ...", filename);
-		return -1;
-	}
-	fread(&n_triangles, sizeof(int), 1, fp);
-
-	*object = (float *)malloc(n_triangles*bytes_per_primitive);
-	if (*object == NULL){
-		fprintf(stderr, "Cannot allocate memory for the geometry file %s ...", filename);
-		return -1;
-	}
-
-	fread(*object, bytes_per_primitive, n_triangles, fp);
-	// fprintf(stdout, "Read %d primitives successfully.\n\n", n_triangles);
-	fclose(fp);
-
-	return n_triangles;
-}
 
 // callbacks
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
@@ -185,6 +160,7 @@ void timer_scene(int value) {
 	ben.cur_frame = timestamp_scene % ben.num_frames;
 	wolf.cur_frame = timestamp_scene % wolf.num_frames;
 	spider.cur_frame = timestamp_scene % spider.num_frames;
+	tank.cur_frame = timestamp_scene % tank.num_frames;
 	//rotation_angle_tiger = (timestamp_scene % 360)*TO_RADIAN;
 	glutPostRedisplay();
 	if (is_time_running)

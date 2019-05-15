@@ -31,6 +31,37 @@ extern loc_Material_Parameters loc_material;
 extern GLint loc_ModelViewProjectionMatrix_TXPS, loc_ModelViewMatrix_TXPS, loc_ModelViewMatrixInvTrans_TXPS;
 extern GLint loc_texture, loc_flag_texture_mapping, loc_flag_fog;
 
+// codes for the 'general' triangular-mesh object
+enum GEOM_OBJ_TYPE { GEOM_OBJ_TYPE_V = 0, GEOM_OBJ_TYPE_VN, GEOM_OBJ_TYPE_VNT };
+// GEOM_OBJ_TYPE_V: (x, y, z)
+// GEOM_OBJ_TYPE_VN: (x, y, z, nx, ny, nz)
+// GEOM_OBJ_TYPE_VNT: (x, y, z, nx, ny, nz, s, t)
+int GEOM_OBJ_ELEMENTS_PER_VERTEX[3] = { 3, 6, 8 };
+
+int read_geometry(GLfloat **object, GEOM_OBJ_TYPE obj_type, char *filename) {
+	int n_triangles;
+	FILE *fp;
+
+	// fprintf(stdout, "Reading geometry from the geometry file %s...\n", filename);
+	fp = fopen(filename, "rb");
+	if (fp == NULL) {
+		fprintf(stderr, "Cannot open the object file %s ...", filename);
+		return -1;
+	}
+
+	fread(&n_triangles, sizeof(int), 1, fp);
+	*object = (float *)malloc(n_triangles * 3 * GEOM_OBJ_ELEMENTS_PER_VERTEX[obj_type] * sizeof(float));
+	if (*object == NULL) {
+		fprintf(stderr, "Cannot allocate memory for the geometry file %s ...", filename);
+		return -1;
+	}
+
+	fread(*object, 3 * GEOM_OBJ_ELEMENTS_PER_VERTEX[obj_type] * sizeof(float), n_triangles, fp);
+	// fprintf(stdout, "Read %d primitives successfully.\n\n", n_triangles);
+	fclose(fp);
+
+	return n_triangles;
+}
 
 
 class object
@@ -42,6 +73,7 @@ private:
 public:
 	GLuint vbo, vao;
 	Material_Parameters material;
+	GEOM_OBJ_TYPE obj_type;
 
 	glm::vec3 position;
 	glm::vec3 velocity;
@@ -77,6 +109,7 @@ object::object
 	, scale(1)
 	, rotate(0)
 	, material(material)
+	, obj_type(GEOM_OBJ_TYPE_VNT)
 {
 
 }
@@ -88,7 +121,7 @@ inline void object::prepare(void)
 	num_bytes_per_vertex = 8 * sizeof(float); // 3 for vertex, 3 for normal, and 2 for texcoord
 	num_bytes_per_triangle = 3 * num_bytes_per_vertex;
 
-	num_triangles = read_geometry(&vertices, num_bytes_per_triangle, &filename_vertices[0]);
+	num_triangles = read_geometry(&vertices, obj_type, &filename_vertices[0]);
 	// assume all geometry files are effective
 	num_total_triangles += num_triangles;
 
