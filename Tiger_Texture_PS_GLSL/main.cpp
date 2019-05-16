@@ -6,6 +6,7 @@
 #include "object.hpp"
 #include "carmera.hpp"
 #include "utility.h"
+#include "car.hpp"
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -106,6 +107,10 @@ object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom", TYPE_VNT);
 
 
 object cow2(1, "Data/static_objects/txtdata/cow_triangles_v.txt", TYPE_V);
+object body(1, "Data/static_objects/txtdata/car_body_triangles_v.txt", TYPE_V);
+car car1();
+
+object* slected;
 
 // callbacks
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
@@ -202,18 +207,18 @@ void keyboard(unsigned char key, int x, int y) {
 		cur_cam = &cams[key - '0'];
 		break;
 	case 'a':
-		ben.turn_left(5 * TO_RADIAN);
+		slected->turn_left(5 * TO_RADIAN);
 		ben.move_forward(5);
 		break;
 	case 's':
-		ben.move_forward(-5);
+		slected->move_forward(-5);
 		break;
 	case 'd':
-		ben.turn_left(-5 * TO_RADIAN);
-		ben.move_forward(5);
+		slected->turn_left(-5 * TO_RADIAN);
+		slected->move_forward(5);
 		break;
 	case 'w':
-		ben.move_forward(5);
+		slected->move_forward(5);
 		break;
 	case 'f':
 		flag_fog = 1 - flag_fog;
@@ -540,10 +545,12 @@ void init_objects(void) {
 
 	cow2.position = { 0, 200, 0 };
 	cow2.scale = glm::vec3(100, 100, 100);
-	cow2.type = TYPE_V;
 	cow2.is_binary_file = false;
-	
 
+
+	slected = car1.body;
+
+	/*
 	objects.emplace_back(&tiger);
 	objects.emplace_back(&ben);
 	objects.emplace_back(&wolf);
@@ -559,14 +566,19 @@ void init_objects(void) {
 
 
 	objects.emplace_back(&cow2);
+	*/
+	
 
+	
 
+	/*
 	int obj_cnt = 0;
 	for (auto& obj : objects) {
 		obj->position.x = 300.0f * cos(TO_RADIAN * 30 * obj_cnt);
 		obj->position.z = 300.0f * sin(TO_RADIAN * 30 * obj_cnt);
 		obj_cnt++;
 	}
+	*/
 }
 
 void prepare_scene(void) {
@@ -637,4 +649,9 @@ void main(int argc, char *argv[]) {
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutMainLoop();
+}
+
+car car1()
+{
+	return car();
 }

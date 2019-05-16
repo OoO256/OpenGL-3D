@@ -49,7 +49,6 @@ extern unsigned int timestamp_scene;
 class object
 {
 public:
-
 	GLuint vbo, vao;
 	Material_Parameters material;
 	OBJ_TYPE type;
@@ -74,6 +73,9 @@ public:
 	bool is_texture_on;
 	bool is_binary_file;
 
+	object* parent;
+
+	object() : num_frames(0) {};
 	object(int num_frames, std::string fv, OBJ_TYPE type, std::string ft);
 	void prepare(void);
 	void draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix);
@@ -118,6 +120,7 @@ object::object
 	, is_binary_file(true)
 	, timestamp_last(timestamp_scene)
 	, original_dir(0, 0, 1)
+	, parent(nullptr)
 {
 
 }
@@ -251,33 +254,19 @@ glm::mat4 object::getModelMatrix()
 			axis
 		);
 	}
-	/*
-
-	ModelMatrix = glm::rotate(
-		ModelMatrix,
-		this->rotate.x,
-		glm::vec3(1.0f, 0.0f, 0.0f)
-	);
-
-	ModelMatrix = glm::rotate(
-		ModelMatrix,
-		this->rotate.y,
-		glm::vec3(0.0f, 1.0f, 0.0f)
-	);
-
-	ModelMatrix = glm::rotate(
-		ModelMatrix,
-		this->rotate.z,
-		glm::vec3(0.0f, 0.0f, 1.0f)
-	);
-	*/
 
 	ModelMatrix = glm::scale(
 		ModelMatrix,
 		this->scale
 	);
 
-	return ModelMatrix;
+	if (parent == nullptr) {
+		return ModelMatrix;
+	}
+	else
+	{
+		return ModelMatrix * parent->getModelMatrix();
+	}
 }
 
 void object::updata_pos() {
