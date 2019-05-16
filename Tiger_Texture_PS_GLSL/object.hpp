@@ -251,6 +251,7 @@ glm::mat4 object::getModelMatrix()
 			axis
 		);
 	}
+	/*
 
 	ModelMatrix = glm::rotate(
 		ModelMatrix,
@@ -269,6 +270,7 @@ glm::mat4 object::getModelMatrix()
 		this->rotate.z,
 		glm::vec3(0.0f, 0.0f, 1.0f)
 	);
+	*/
 
 	ModelMatrix = glm::scale(
 		ModelMatrix,

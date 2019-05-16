@@ -56,6 +56,7 @@ public:
 	
 	void move(spherical_coordinate diff);
 	void move(float radius, float angle1, float angle2);
+	void move(glm::vec3);
 	glm::mat4 getView();
 
 private:
@@ -81,13 +82,19 @@ inline carmera::carmera(float radius, float angle1, float angle2)
 
 inline void carmera::move(float radius, float angle1, float angle2)
 {
-	this->move({ radius, angle1, angle2 });
+	this->move(spherical_coordinate{ radius, angle1, angle2 });
 }
 
 inline void carmera::move(spherical_coordinate diff)
 {
 	spher += diff;
 	pos = spher_to_rect(spher);
+}
+
+inline void carmera::move(glm::vec3 pos)
+{
+	this->pos = pos;
+	this->spher = rect_to_spher(pos);
 }
 
 inline glm::mat4 carmera::getView()

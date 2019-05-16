@@ -111,9 +111,14 @@ object cow2(1, "Data/static_objects/txtdata/cow_triangles_v.txt", TYPE_V);
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
 
 carmera cam1(1000, 1000, 1000);
+carmera cam2(1000, 1000, 1000);
+carmera* cur_cam = &cam1;
 
 void display(void) {
-	ViewMatrix = cam1.getView();
+	cam2.move(ben.position + glm::vec3{0, 0, 50});
+	cam2.center = ben.position + glm::normalize(ben.velocity);
+
+	ViewMatrix = cur_cam->getView();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -208,7 +213,12 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'w':
 		ben.move_forward(5);
 		break;
-
+	case 'q':
+		cur_cam = &cam2;
+		break; 
+	case 'e':
+		cur_cam = &cam1;
+		break;
 	case 'f':
 		flag_fog = 1 - flag_fog;
 		glUseProgram(h_ShaderProgram_TXPS);
@@ -499,14 +509,18 @@ void set_up_scene_lights(void) {
 }
 
 void init_objects(void) {
-	tiger.rotate = glm::vec3(-90.0f*TO_RADIAN, 0, 0);
+	tiger.original_dir = { 0, -1, 0 };
+	//optimus.original_dir = { 1, 0, 0 };
+	cow.original_dir = { 1, 0, 0 };
+	cow.position.y += 22;
+	tank.original_dir = { 0, -1, 0 };
+
+
 	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
 	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
 	spider.scale = glm::vec3(50.0f, -50.0f, 50.0f);
-	optimus.rotate = glm::vec3(-90.0f*TO_RADIAN, -90.0f*TO_RADIAN, 0);
 	optimus.scale = glm::vec3(0.1f, 0.1f, 0.1f);
 	cow.scale = glm::vec3(80.0f, 80.0f, 80.0f);
-	cow.rotate = glm::vec3(0, -90.0f*TO_RADIAN, 0);
 
 	bike.scale = glm::vec3(20.0f, 20.0f, 20.0f);
 	bus.scale = glm::vec3(3.0f, 3.0f, 3.0f);
