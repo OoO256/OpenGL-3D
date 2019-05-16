@@ -7,7 +7,8 @@
 
 #include <glm/gtc/matrix_transform.hpp> //translate, rotate, scale, lookAt, perspective, etc.
 #include <glm/gtc/matrix_inverse.hpp> // inverseTranspose, etc.
-
+#include <vector>
+#include <functional>
 #include "utility.h"
 
 // codes for the 'general' triangular-mesh object
@@ -78,4 +79,21 @@ glm::vec4 vec3_to_4(const glm::vec3 &  v, int x) {
 
 glm::vec3 vec4_to_3(const glm::vec4 &  v) {
 	return { v.x, v.y, v.z };
+}
+
+namespace functor {
+	decltype(auto) translate(glm::mat4 m, glm::vec3 v) {
+		return [&v](glm::mat4 m) { m = glm::translate(m, v); };
+	}
+
+	std::vector<std::lambda
+
+	void translate(glm::mat4 m) {
+		m = glm::translate(m, { 0, 0, 1 });
+	}
+
+	void translate(glm::mat4 m) {
+		m = glm::translate(m, { 0, 0, 1 });
+	}
+
 }

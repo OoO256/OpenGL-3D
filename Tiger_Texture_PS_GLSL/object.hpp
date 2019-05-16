@@ -88,7 +88,6 @@ public:
 	void turn_left(float rad);
 	//void align(glm::vec3);
 
-
 	~object();
 
 
@@ -134,6 +133,9 @@ inline object::~object()
 
 inline void object::prepare(void)
 {
+	auto f = [](glm::mat4 m) { return (glm::mat4)(glm::translate(m, glm::vec3(0, 0, 0))); };
+
+
 	int num_total_triangles = 0;
 	char filename[512];
 
@@ -238,7 +240,11 @@ inline void object::draw(const glm::mat4& ViewMatrix, const glm::mat4& Projectio
 
 glm::mat4 object::getModelMatrix()
 {
+	auto 
+
 	glm::mat4 ModelMatrix(1.0f);
+
+
 
 	if (parent != nullptr) {
 		ModelMatrix = ModelMatrix * parent->getModelMatrix();

@@ -13,5 +13,4 @@ int read_geometry_file_txt(GLfloat **object, OBJ_TYPE obj_type, char *filename);
 
 glm::vec4 vec3_to_4(const glm::vec3 &  v, int x);
 
-
-glm::vec3 vec4_to_3(const glm::vec4 &  v);
+glm::vec3 vec4_to_3(const glm::vec4 & v);

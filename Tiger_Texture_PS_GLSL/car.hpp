@@ -53,6 +53,15 @@ car::car(void)
 	wheels[3]->position = glm::vec3(3.9, -3.5, -4.5);
 
 
+
+
+	nuts[0][0]->position = glm::vec3(1.2f, 0.0f, 1.0);
+	nuts[1][0]->position = glm::vec3(1.2f, 0.0f, 1.0);
+
+
+	nuts[2][0]->position = glm::vec3(1.2f, 0.0f, -1.0);
+	nuts[3][0]->position = glm::vec3(1.2f, 0.0f, -1.0);
+	//nuts[1][0]->position = glm::vec3(1.2f, 0.0f, 1.0);
 }
 
 car::~car()
