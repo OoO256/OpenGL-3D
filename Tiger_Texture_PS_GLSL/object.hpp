@@ -240,6 +240,10 @@ glm::mat4 object::getModelMatrix()
 {
 	glm::mat4 ModelMatrix(1.0f);
 
+	if (parent != nullptr) {
+		ModelMatrix = ModelMatrix * parent->getModelMatrix();
+	}
+
 	ModelMatrix = glm::translate(
 		ModelMatrix,
 		this->position
@@ -260,13 +264,8 @@ glm::mat4 object::getModelMatrix()
 		this->scale
 	);
 
-	if (parent == nullptr) {
-		return ModelMatrix;
-	}
-	else
-	{
-		return ModelMatrix * parent->getModelMatrix();
-	}
+
+	return ModelMatrix;
 }
 
 void object::updata_pos() {
