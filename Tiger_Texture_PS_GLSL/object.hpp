@@ -42,6 +42,9 @@ enum OBJ_TYPE { TYPE_V = 0, TYPE_VN, TYPE_VNT };
 // GEOM_OBJ_TYPE_VNT: (x, y, z, nx, ny, nz, s, t)
 constexpr int elements_per_vertex[3] = { 3, 6, 8 };
 
+extern unsigned int timestamp_scene;
+
+
 int read_geometry_file_binary(GLfloat **object, OBJ_TYPE obj_type, char *filename) {
 	int n_triangles;
 	FILE *fp;
@@ -96,6 +99,14 @@ int read_geometry_file_txt(GLfloat **object, OBJ_TYPE obj_type, char *filename) 
 	return n_triangles;
 }
 
+glm::vec4 vec3_to_4(const glm::vec3 &  v, int x) {
+	return { v.x, v.y, v.z, x };
+}
+
+
+glm::vec3 vec4_to_3(const glm::vec4 &  v) {
+	return { v.x, v.y, v.z };
+}
 
 
 class object
@@ -111,6 +122,7 @@ public:
 	glm::vec3 acceleration;
 	glm::vec3 scale;
 	glm::vec3 rotate;
+	unsigned int timestamp_last = 0;
 
 	const int num_frames;
 	int cur_frame;
@@ -125,8 +137,18 @@ public:
 	bool is_binary_file;
 
 	object(int num_frames, std::string fv, OBJ_TYPE type, std::string ft);
-	virtual void prepare(void);
-	virtual void draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix);
+	void prepare(void);
+	void draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix);
+	void next_frame() { cur_frame = (cur_frame + 1) % num_frames; };
+
+
+	void updata_pos();
+
+	void move_forward(float s);
+	void turn_left(float rad);
+	//void align(glm::vec3);
+
+
 	~object();
 
 
@@ -146,7 +168,7 @@ object::object
 	, filename_texture(ft)
 	, position(0)
 	, material(tiger_material)
-	, velocity(0)
+	, velocity({0, 0, 1e-7})
 	, acceleration(0)
 	, scale(1)
 	, rotate(0)
@@ -156,6 +178,7 @@ object::object
 	, cur_frame(0)
 	, is_texture_on(true)
 	, is_binary_file(true)
+	, timestamp_last(timestamp_scene)
 {
 
 }
@@ -304,4 +327,32 @@ glm::mat4 object::getModelMatrix()
 	);
 
 	return ModelMatrix;
+}
+
+void object::updata_pos() {
+	float dtime = timestamp_scene - timestamp_last;
+
+	position += velocity * dtime + 0.5f * acceleration * dtime * dtime;
+	velocity += (acceleration) * dtime;
+
+	timestamp_last = timestamp_scene;
+}
+
+inline void object::move_forward(float s)
+{
+	position += s * normalize(velocity);
+}
+
+inline void object::turn_left(float rad)
+{
+	glm::vec3 forward = glm::normalize(velocity);
+	auto up = glm::vec3(0, 1, 0);
+
+	auto right = glm::cross(forward, up);
+	up = glm::cross(right, forward);
+
+	auto m_rotate = glm::rotate(glm::mat4(1), rad, up);
+
+
+	velocity = vec4_to_3(m_rotate * vec3_to_4(velocity, 0));
 }

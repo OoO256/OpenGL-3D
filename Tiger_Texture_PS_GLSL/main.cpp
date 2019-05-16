@@ -83,7 +83,6 @@ float rotation_angle_tiger = 0.0f;
 
 // my object
 std::vector<object *>objects;
-object drangon(1, "Data/static_objects/dragon_vnt.geom", TYPE_VNT);
 object optimus(1, "Data/static_objects/optimus_vnt.geom", TYPE_VNT);
 object cow(1, "Data/static_objects/cow_vn.geom", TYPE_VNT);
 object bike(1, "Data/static_objects/bike_vnt.geom", TYPE_VNT);
@@ -138,16 +137,9 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_simple, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	draw_axes();
 
-
-	int obj_cnt = 0;
-
 	glUseProgram(h_ShaderProgram_TXPS);
 	for (auto& obj : objects)
-	{
-		obj->position.x = 300.0f * cos(TO_RADIAN*30* obj_cnt);
-		obj->position.z = 300.0f * sin(TO_RADIAN*30* obj_cnt);
-		obj_cnt++;
-		
+	{		
 		obj->draw(ViewMatrix, ProjectionMatrix);
 	}
 
@@ -158,12 +150,14 @@ void display(void) {
 
 void timer_scene(int value) {
 	timestamp_scene = (timestamp_scene + 1) % UINT_MAX;
-	tiger.cur_frame = timestamp_scene % tiger.num_frames;
-	ben.cur_frame = timestamp_scene % ben.num_frames;
-	wolf.cur_frame = timestamp_scene % wolf.num_frames;
-	spider.cur_frame = timestamp_scene % spider.num_frames;
-	tank.cur_frame = timestamp_scene % tank.num_frames;
-	//rotation_angle_tiger = (timestamp_scene % 360)*TO_RADIAN;
+	
+	if (timestamp_scene % 10 == 0) {
+		for (auto& obj : objects)
+		{
+			obj->next_frame();
+		}
+	}
+
 	glutPostRedisplay();
 	if (is_time_running)
 		glutTimerFunc(10, timer_scene, 0);
@@ -192,15 +186,21 @@ void keyboard(unsigned char key, int x, int y) {
 	}
 
 	switch (key) {
-	case 'a': // toggle the animation effect.
-		is_time_running = 1 - is_time_running;
-		if (is_time_running) {
-			glutTimerFunc(100, timer_scene, 0);
-			fprintf(stdout, "^^^ Animation mode ON.\n");
-		}
-		else
-			fprintf(stdout, "^^^ Animation mode OFF.\n");
+	case 'a':
+		ben.turn_left(5 * TO_RADIAN);
+		ben.move_forward(5);
 		break;
+	case 's':
+		ben.move_forward(-5);
+		break;
+	case 'd':
+		ben.turn_left(-5 * TO_RADIAN);
+		ben.move_forward(5);
+		break;
+	case 'w':
+		ben.move_forward(5);
+		break;
+
 	case 'f':
 		flag_fog = 1 - flag_fog;
 		glUseProgram(h_ShaderProgram_TXPS);
@@ -233,24 +233,6 @@ void keyboard(unsigned char key, int x, int y) {
 			glutPostRedisplay();
 			break;
 		}
-		break;
-	case 'd':
-		PRP_distance_level = (PRP_distance_level + 1) % 6;
-		fprintf(stdout, "^^^ Distance level = %d.\n", PRP_distance_level);
-
-		ViewMatrix = glm::lookAt(PRP_distance_scale[PRP_distance_level] * glm::vec3(500.0f, 300.0f, 500.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-		glUseProgram(h_ShaderProgram_TXPS);
-		// Must update the light 1's geometry in EC.
-		position_EC = ViewMatrix * glm::vec4(light[1].position[0], light[1].position[1],
-			light[1].position[2], light[1].position[3]);
-		glUniform4fv(loc_light[1].position, 1, &position_EC[0]);
-		direction_EC = glm::mat3(ViewMatrix) * glm::vec3(light[1].spot_direction[0],
-			light[1].spot_direction[1], light[1].spot_direction[2]);
-		glUniform3fv(loc_light[1].spot_direction, 1, &direction_EC[0]);
-		glUseProgram(0);
-		glutPostRedisplay();
 		break;
 	case 'p':
 		flag_polygon_fill = 1 - flag_polygon_fill;
@@ -513,8 +495,6 @@ void init_objects(void) {
 	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
 	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
 	spider.scale = glm::vec3(50.0f, -50.0f, 50.0f);
-	drangon.rotate = glm::vec3(0*TO_RADIAN, 0*TO_RADIAN, 0 * TO_RADIAN);
-	drangon.scale = glm::vec3(3.0f, 3.0f, 3.0f);
 	optimus.rotate = glm::vec3(-90.0f*TO_RADIAN, -90.0f*TO_RADIAN, 0);
 	optimus.scale = glm::vec3(0.1f, 0.1f, 0.1f);
 	cow.scale = glm::vec3(80.0f, 80.0f, 80.0f);
@@ -531,13 +511,13 @@ void init_objects(void) {
 	cow2.scale = glm::vec3(100, 100, 100);
 	cow2.type = TYPE_V;
 	cow2.is_binary_file = false;
+	
 
 	objects.emplace_back(&tiger);
 	objects.emplace_back(&ben);
 	objects.emplace_back(&wolf);
 	objects.emplace_back(&spider);
 
-	objects.emplace_back(&drangon);
 	objects.emplace_back(&optimus);
 	objects.emplace_back(&cow);
 	objects.emplace_back(&bike);
@@ -548,6 +528,14 @@ void init_objects(void) {
 
 
 	objects.emplace_back(&cow2);
+
+
+	int obj_cnt = 0;
+	for (auto& obj : objects) {
+		obj->position.x = 300.0f * cos(TO_RADIAN * 30 * obj_cnt);
+		obj->position.z = 300.0f * sin(TO_RADIAN * 30 * obj_cnt);
+		obj_cnt++;
+	}
 }
 
 void prepare_scene(void) {
