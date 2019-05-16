@@ -115,8 +115,8 @@ carmera cam2(1000, 1000, 1000);
 carmera* cur_cam = &cam1;
 
 void display(void) {
-	cam2.move(ben.position + glm::vec3{0, 0, 50});
-	cam2.center = ben.position + glm::normalize(ben.velocity);
+	cam2.move(ben.position + glm::vec3{0, 200, 0} - glm::normalize(ben.velocity) * 100.0f);
+	cam2.center = ben.position + glm::normalize(ben.velocity) * 100.0f;
 
 	ViewMatrix = cur_cam->getView();
 
@@ -305,6 +305,15 @@ void reshape(int width, int height) {
 	
 	aspect_ratio = (float) width / height;
 	ProjectionMatrix = glm::perspective(45.0f*TO_RADIAN, aspect_ratio, 100.0f, 20000.0f);
+	/*
+	glm::mat4 projectionMatrix = glm::perspective(
+	glm::radians(FoV),  // 수직방향 시야각입니다 : "줌"의 크기. "카메라 렌즈" 를 생각해보세요. 이들은 보통 90도 (엑스트라 와이드) 에서 30도 (크게 확대한 경우) 사이에 있습니다
+	4.0f / 3.0f, // 화면 비 입니다. 이것은 당신의 윈도우 크기에 의존합니다. 4/3 == 800/600 == 1280/960 인데, 어디서 본것 같죠 ?
+	0.1f,        // Near clipping plane (근거리 잘라내기 평면). 최대한 크게 하세요. 아니면 정확도 문제가 생길 수 있습니다.
+	100.0f       // Far clipping plane (원거리 잘라내기 평면). 최대한 작게 하세요.
+);
+	*/
+
 
 	glutPostRedisplay();
 }
