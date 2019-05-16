@@ -17,6 +17,8 @@
 #include "Shaders/LoadShaders.h"
 #include "My_Shading.h"
 
+#include "utility.h"
+
 #define LOC_VERTEX 0
 #define LOC_NORMAL 1
 #define LOC_TEXCOORD 2
@@ -36,78 +38,13 @@ extern GLint loc_ModelViewProjectionMatrix_TXPS, loc_ModelViewMatrix_TXPS, loc_M
 extern GLint loc_texture, loc_flag_texture_mapping, loc_flag_fog;
 
 // codes for the 'general' triangular-mesh object
-enum OBJ_TYPE { TYPE_V = 0, TYPE_VN, TYPE_VNT };
+//extern enum OBJ_TYPE { TYPE_V = 0, TYPE_VN, TYPE_VNT };
 // GEOM_OBJ_TYPE_V: (x, y, z)
 // GEOM_OBJ_TYPE_VN: (x, y, z, nx, ny, nz)
 // GEOM_OBJ_TYPE_VNT: (x, y, z, nx, ny, nz, s, t)
-constexpr int elements_per_vertex[3] = { 3, 6, 8 };
+//extern constexpr int elements_per_vertex[3] = { 3, 6, 8 };
 
 extern unsigned int timestamp_scene;
-
-
-int read_geometry_file_binary(GLfloat **object, OBJ_TYPE obj_type, char *filename) {
-	int n_triangles;
-	FILE *fp;
-
-	// fprintf(stdout, "Reading geometry from the geometry file %s...\n", filename);
-	fp = fopen(filename, "rb");
-	if (fp == NULL) {
-		fprintf(stderr, "Cannot open the object file %s ...", filename);
-		return -1;
-	}
-
-	fread(&n_triangles, sizeof(int), 1, fp);
-	*object = (float *)malloc(n_triangles * 3 * elements_per_vertex[obj_type] * sizeof(float));
-	if (*object == NULL) {
-		fprintf(stderr, "Cannot allocate memory for the geometry file %s ...", filename);
-		return -1;
-	}
-
-	fread(*object, 3 * elements_per_vertex[obj_type] * sizeof(float), n_triangles, fp);
-	// fprintf(stdout, "Read %d primitives successfully.\n\n", n_triangles);
-	fclose(fp);
-
-	return n_triangles;
-}
-
-int read_geometry_file_txt(GLfloat **object, OBJ_TYPE obj_type, char *filename) {
-	int n_triangles;
-	FILE *fp;
-
-	// fprintf(stdout, "Reading geometry from the geometry file %s...\n", filename);
-	fp = fopen(filename, "r");
-	if (fp == NULL) {
-		fprintf(stderr, "Cannot open the object file %s ...", filename);
-		return -1;
-	}
-
-	fscanf(fp, "%d", &n_triangles);
-	*object = (float *)malloc(n_triangles * 3 * elements_per_vertex[obj_type] * sizeof(float));
-	if (*object == NULL) {
-		fprintf(stderr, "Cannot allocate memory for the geometry file %s ...", filename);
-		return -1;
-	}
-
-	// fprintf(stdout, "Read %d primitives successfully.\n\n", n_triangles);
-	for (size_t i = 0; i < n_triangles * 3 * elements_per_vertex[obj_type]; i++)
-	{
-		fscanf(fp, "%f", *object + i);
-	}
-
-	fclose(fp);
-
-	return n_triangles;
-}
-
-glm::vec4 vec3_to_4(const glm::vec3 &  v, int x) {
-	return { v.x, v.y, v.z, x };
-}
-
-
-glm::vec3 vec4_to_3(const glm::vec4 &  v) {
-	return { v.x, v.y, v.z };
-}
-
 
 class object
 {
@@ -123,6 +60,7 @@ public:
 	glm::vec3 scale;
 	glm::vec3 rotate;
 	unsigned int timestamp_last = 0;
+	glm::vec3 original_dir;
 
 	const int num_frames;
 	int cur_frame;
@@ -168,7 +106,7 @@ object::object
 	, filename_texture(ft)
 	, position(0)
 	, material(tiger_material)
-	, velocity({0, 0, 1e-7})
+	, velocity({ 0, 0, 1e-7 })
 	, acceleration(0)
 	, scale(1)
 	, rotate(0)
@@ -179,6 +117,7 @@ object::object
 	, is_texture_on(true)
 	, is_binary_file(true)
 	, timestamp_last(timestamp_scene)
+	, original_dir(0, 0, 1)
 {
 
 }
@@ -303,6 +242,16 @@ glm::mat4 object::getModelMatrix()
 		this->position
 	);
 	
+	if (glm::distance(glm::normalize(original_dir),glm::normalize(velocity))) {
+		auto axis = glm::cross(original_dir, glm::normalize(velocity));
+		float rad = acos(glm::dot(original_dir, velocity) / glm::length(original_dir) / glm::length(velocity));
+		ModelMatrix = glm::rotate(
+			ModelMatrix,
+			rad,
+			axis
+		);
+	}
+
 	ModelMatrix = glm::rotate(
 		ModelMatrix,
 		this->rotate.x,

@@ -27,6 +27,9 @@
     <ClCompile Include="floor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="utility.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="My_Shading.h">
@@ -51,6 +54,9 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="car.hpp">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="utility.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,6 +5,7 @@
 #include "floor.h"
 #include "object.hpp"
 #include "carmera.hpp"
+#include "utility.h"
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -38,6 +39,13 @@ Light_Parameters light[NUMBER_OF_LIGHT_SUPPORTED];
 // texture stuffs
 GLuint texture_names[N_TEXTURES_USED];
 int flag_texture_mapping;
+
+// codes for the 'general' triangular-mesh object
+//extern enum OBJ_TYPE { TYPE_V = 0, TYPE_VN, TYPE_VNT };
+// GEOM_OBJ_TYPE_V: (x, y, z)
+// GEOM_OBJ_TYPE_VN: (x, y, z, nx, ny, nz)
+// GEOM_OBJ_TYPE_VNT: (x, y, z, nx, ny, nz, s, t)
+//extern constexpr int elements_per_vertex[3] = { 3, 6, 8 };
 
 void My_glTexImage2D_from_file(char *filename) {
 	FREE_IMAGE_FORMAT tx_file_format;
@@ -115,10 +123,16 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_simple, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glLineWidth(2.0f);
 	draw_axes();
-	glLineWidth(1.0f);
+	glLineWidth(1.0f);	
+
+	glUseProgram(h_ShaderProgram_simple);
+	ModelViewProjectionMatrix = glm::scale(ModelViewProjectionMatrix, glm::vec3(20.0f, 20.0f, 20.0f));
+	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_simple, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
+	draw_axes();
+
 
 	glUseProgram(h_ShaderProgram_TXPS);
-  	set_material_floor();
+	set_material_floor();
 	glUniform1i(loc_texture, TEXTURE_ID_FLOOR);
 	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(-500.0f, 0.0f, 500.0f));
 	ModelViewMatrix = glm::scale(ModelViewMatrix, glm::vec3(1000.0f, 1000.0f, 1000.0f));
@@ -130,12 +144,6 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewMatrix_TXPS, 1, GL_FALSE, &ModelViewMatrix[0][0]);
 	glUniformMatrix3fv(loc_ModelViewMatrixInvTrans_TXPS, 1, GL_FALSE, &ModelViewMatrixInvTrans[0][0]);
 	draw_floor();
-	
-
-	glUseProgram(h_ShaderProgram_simple);
-	ModelViewProjectionMatrix = glm::scale(ModelViewProjectionMatrix, glm::vec3(20.0f, 20.0f, 20.0f));
-	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_simple, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
-	draw_axes();
 
 	glUseProgram(h_ShaderProgram_TXPS);
 	for (auto& obj : objects)

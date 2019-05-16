@@ -90,6 +90,7 @@
     <ClCompile Include="floor.cpp" />
     <ClCompile Include="Shaders\LoadShaders.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="axes.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="My_Shading.h" />
     <ClInclude Include="Shaders\LoadShaders.h" />
     <ClInclude Include="object.hpp" />
+    <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Phong_Tx.frag" />
