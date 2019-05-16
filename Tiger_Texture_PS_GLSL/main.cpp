@@ -110,13 +110,12 @@ object cow2(1, "Data/static_objects/txtdata/cow_triangles_v.txt", TYPE_V);
 // callbacks
 float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
 
-carmera cam1(1000, 1000, 1000);
-carmera cam2(1000, 1000, 1000);
-carmera* cur_cam = &cam1;
+std::vector<carmera>cams;
+carmera* cur_cam;
 
 void display(void) {
-	cam2.move(ben.position + glm::vec3{0, 200, 0} - glm::normalize(ben.velocity) * 100.0f);
-	cam2.center = ben.position + glm::normalize(ben.velocity) * 100.0f;
+	cams[1].move(ben.position + glm::vec3{0, 200, 0} - glm::normalize(ben.velocity) * 100.0f);
+	cams[1].center = ben.position + glm::normalize(ben.velocity) * 100.0f;
 
 	ViewMatrix = cur_cam->getView();
 
@@ -195,10 +194,13 @@ void keyboard(unsigned char key, int x, int y) {
 		glUseProgram(0);
 
 		glutPostRedisplay();
-		return;
 	}
 
 	switch (key) {
+
+	case '1':
+		cur_cam = &cams[key - '0'];
+		break;
 	case 'a':
 		ben.turn_left(5 * TO_RADIAN);
 		ben.move_forward(5);
@@ -212,12 +214,6 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case 'w':
 		ben.move_forward(5);
-		break;
-	case 'q':
-		cur_cam = &cam2;
-		break; 
-	case 'e':
-		cur_cam = &cam1;
 		break;
 	case 'f':
 		flag_fog = 1 - flag_fog;
@@ -261,10 +257,10 @@ void keyboard(unsigned char key, int x, int y) {
 		glutPostRedisplay();
 		break;
 	case 44:
-		cam1.move(-10, 0, 0);
+		cams[0].move(-10, 0, 0);
 		break;
 	case 46:
-		cam1.move(10, 0, 0);
+		cams[0].move(10, 0, 0);
 		break;
 	case 27: // ESC key
 		glutLeaveMainLoop(); // Incur destuction callback for cleanups
@@ -279,19 +275,19 @@ void special_keyboard(int key, int x, int y) {
 	{
 	case GLUT_KEY_UP:
 		//do something here
-		cam1.move(0, 0, 0.1);
+		cams[0].move(0, 0, 0.1);
 		break;
 	case GLUT_KEY_DOWN:
 		//do something here
-		cam1.move(0, 0, -0.1);
+		cams[0].move(0, 0, -0.1);
 		break;
 	case GLUT_KEY_LEFT:
 		//do something here
-		cam1.move(0, 0.1, 0);
+		cams[0].move(0, 0.1, 0);
 		break;
 	case GLUT_KEY_RIGHT:
 		//do something here
-		cam1.move(0, -0.1, 0);
+		cams[0].move(0, -0.1, 0);
 		break;
 	default:
 		break;
@@ -518,6 +514,10 @@ void set_up_scene_lights(void) {
 }
 
 void init_objects(void) {
+	cams.emplace_back(1000, 1000, 1000);
+	cams.emplace_back(1000, 1000, 1000);
+	cur_cam = &cams[0];
+
 	tiger.original_dir = { 0, -1, 0 };
 	//optimus.original_dir = { 1, 0, 0 };
 	cow.original_dir = { 1, 0, 0 };
