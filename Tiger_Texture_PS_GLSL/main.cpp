@@ -1,4 +1,6 @@
 #include <vector>
+#include <iostream>
+#include <algorithm>
 
 #include "main.h"
 #include "axes.h"
@@ -108,7 +110,7 @@ object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom", TYPE_VNT);
 
 object cow2(1, "Data/static_objects/txtdata/cow_triangles_v.txt", TYPE_V);
 object body(1, "Data/static_objects/txtdata/car_body_triangles_v.txt", TYPE_V);
-car car1();
+car* car1;
 
 object* slected;
 
@@ -547,8 +549,8 @@ void init_objects(void) {
 	cow2.scale = glm::vec3(100, 100, 100);
 	cow2.is_binary_file = false;
 
-
-	slected = car1.body;
+	car1 = new car();
+	slected = car1->body;
 
 	/*
 	objects.emplace_back(&tiger);
@@ -649,9 +651,4 @@ void main(int argc, char *argv[]) {
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutMainLoop();
-}
-
-car car1()
-{
-	return car();
 }
