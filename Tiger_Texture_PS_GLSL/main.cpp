@@ -204,23 +204,23 @@ void keyboard(unsigned char key, int x, int y) {
 	}
 
 	switch (key) {
-
+	case '0': 
 	case '1':
 		cur_cam = &cams[key - '0'];
 		break;
 	case 'a':
 		slected->turn_left(5 * TO_RADIAN);
-		ben.move_forward(5);
+		car1->move_forward(5);
 		break;
 	case 's':
-		slected->move_forward(-5);
+		car1->move_forward(-5);
 		break;
 	case 'd':
 		slected->turn_left(-5 * TO_RADIAN);
-		slected->move_forward(5);
+		car1->move_forward(5);
 		break;
 	case 'w':
-		slected->move_forward(5);
+		car1->move_forward(5);
 		break;
 	case 'f':
 		flag_fog = 1 - flag_fog;

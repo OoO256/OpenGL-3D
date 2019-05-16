@@ -2,6 +2,7 @@
 #include <vector>
 #include "object.hpp"
 #include "main.h"
+#include "utility.h"
 
 extern std::vector<object *>objects;
 
@@ -14,6 +15,8 @@ public:
 
 	car(void);
 	~car();
+	void move_forward(float s);
+
 
 };
 
@@ -24,7 +27,8 @@ car::car(void)
 	body->position = { 0, 200, 0 };
 	body->scale = glm::vec3(10, 10, 10);
 	body->is_binary_file = false;
-	body->original_dir = glm::vec3(-1, 0, 0);
+	body->original_dir = glm::vec3(1, 0, 0);
+	body->velocity = { 1e-7, 0, 0 };
 	
 	objects.emplace_back(body);
 	nuts.resize(5);
@@ -34,6 +38,8 @@ car::car(void)
 		wheels[i]->parent = body;
 
 		wheels[i]->is_binary_file = false;
+		wheels[i]->velocity = { 1e-7, 0, 0 };
+		wheels[i]->original_dir = glm::vec3(1, 0, 0);
 		objects.push_back(wheels[i]);
 
 		for (int j = 0; j < 5; j++)
@@ -43,6 +49,8 @@ car::car(void)
 
 
 			nuts[i][j]->is_binary_file = false;
+			nuts[i][j]->velocity = { 1e-7, 0, 0 };
+			nuts[i][j]->original_dir = glm::vec3(1, 0, 0);
 			objects.push_back(nuts[i][j]);
 		}
 	}
@@ -66,4 +74,23 @@ car::car(void)
 
 car::~car()
 {
+}
+
+inline void car::move_forward(float s)
+{
+	body->move_forward(s);
+
+
+	auto f = glm::normalize(glm::vec3(1, 0, 0));
+	auto up = glm::vec3(0, 1, 0);
+	auto r = glm::cross(f, up);
+	up = glm::cross(r, f);
+
+	for (auto& w : wheels)
+	{
+		auto m_rotate = glm::rotate(glm::mat4(1), -s * 2 * TO_RADIAN, r);
+		w->velocity = vec4_to_3(m_rotate * vec3_to_4(w->velocity, 0));
+	}
+
+
 }

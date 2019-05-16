@@ -61,6 +61,8 @@ public:
 	unsigned int timestamp_last = 0;
 	glm::vec3 original_dir;
 
+	glm::mat4 additional;
+
 	const int num_frames;
 	int cur_frame;
 	std::vector<int>num_triangles;
@@ -120,6 +122,7 @@ object::object
 	, timestamp_last(timestamp_scene)
 	, original_dir(0, 0, 1)
 	, parent(nullptr)
+	, additional(1)
 {
 
 }
@@ -240,16 +243,11 @@ inline void object::draw(const glm::mat4& ViewMatrix, const glm::mat4& Projectio
 
 glm::mat4 object::getModelMatrix()
 {
-	auto 
-
 	glm::mat4 ModelMatrix(1.0f);
-
-
-
 	if (parent != nullptr) {
 		ModelMatrix = ModelMatrix * parent->getModelMatrix();
 	}
-
+	
 	ModelMatrix = glm::translate(
 		ModelMatrix,
 		this->position
