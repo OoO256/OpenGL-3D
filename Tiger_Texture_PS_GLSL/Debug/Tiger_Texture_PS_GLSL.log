@@ -1,53 +1,57 @@
 ﻿  main.cpp
 c:\usr\local\opengl\include\freeimage\freeimage.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\object.hpp(149): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\object.hpp(149): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\object.hpp(276): warning C4244: '초기화 중': 'unsigned int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(285): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(289): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(293): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(297): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(367): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\object.hpp(276): warning C4244: '초기화 중': 'unsigned int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(285): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(289): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(293): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(297): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(367): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(369): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(369): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(371): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(371): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(373): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(373): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(375): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(375): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(377): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(377): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(379): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(379): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(381): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(381): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(383): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(383): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
   c:\program files (x86)\windows kits\10\include\10.0.16299.0\ucrt\stdio.h(1772): note: 'sprintf' 선언을 참조하십시오.
-c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\xmemory0(920): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\vector(951): note: 컴파일 중인 함수 템플릿 인스턴스화 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int,int,int>(_Alloc &,_Objty *const ,int &&,int &&,int &&)'에 대한 참조를 확인하십시오.
+c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\xmemory0(881): warning C4244: '인수': '_Ty'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+          with
+          [
+              _Ty=int
+          ]
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(902): note: 컴파일 중인 함수 템플릿 인스턴스화 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int,int,int>(_Alloc &,_Objty *const ,int &&,int &&,int &&)'에 대한 참조를 확인하십시오.
           with
           [
               _Alloc=std::allocator<carmera>,
               _Ty=carmera,
               _Objty=carmera
           ]
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\vector(951): note: 컴파일 중인 함수 템플릿 인스턴스화 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int,int,int>(_Alloc &,_Objty *const ,int &&,int &&,int &&)'에 대한 참조를 확인하십시오.
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(902): note: 컴파일 중인 함수 템플릿 인스턴스화 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,int,int,int>(_Alloc &,_Objty *const ,int &&,int &&,int &&)'에 대한 참조를 확인하십시오.
           with
           [
               _Alloc=std::allocator<carmera>,
               _Ty=carmera,
               _Objty=carmera
           ]
-  c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.14.26428\include\vector(968): note: 컴파일 중인 함수 템플릿 인스턴스화 'void std::vector<carmera,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<int,int,int>(int &&,int &&,int &&)'에 대한 참조를 확인하십시오.
+  c:\program files (x86)\microsoft visual studio\2017\professional\vc\tools\msvc\14.16.27023\include\vector(919): note: 컴파일 중인 함수 템플릿 인스턴스화 'void std::vector<carmera,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<int,int,int>(int &&,int &&,int &&)'에 대한 참조를 확인하십시오.
           with
           [
               _Ty=carmera
           ]
-  c:\users\yonguk lee\desktop\opengl-3d\tiger_texture_ps_glsl\main.cpp(524): note: 컴파일 중인 함수 템플릿 인스턴스화 'void std::vector<carmera,std::allocator<_Ty>>::emplace_back<int,int,int>(int &&,int &&,int &&)'에 대한 참조를 확인하십시오.
+  c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\main.cpp(524): note: 컴파일 중인 함수 템플릿 인스턴스화 'void std::vector<carmera,std::allocator<_Ty>>::emplace_back<int,int,int>(int &&,int &&,int &&)'에 대한 참조를 확인하십시오.
           with
           [
               _Ty=carmera
           ]
-  Tiger_Texture_PS_GLSL.vcxproj -> C:\Users\Yonguk Lee\Desktop\OpenGL-3D\Debug\Tiger_Texture_PS_GLSL.exe
+  Tiger_Texture_PS_GLSL.vcxproj -> C:\Users\admin\Desktop\GR\OpenGL-3D\Debug\Tiger_Texture_PS_GLSL.exe

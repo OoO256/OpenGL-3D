@@ -24,7 +24,7 @@ car::car(void)
 {
 	body = new object(1, "Data/static_objects/txtdata/car_body_triangles_v.txt", TYPE_V);
 
-	body->position = { 0, 200, 0 };
+	body->position = { 0, 50, 0 };
 	body->scale = glm::vec3(10, 10, 10);
 	body->is_binary_file = false;
 	body->original_dir = glm::vec3(1, 0, 0);
@@ -51,6 +51,17 @@ car::car(void)
 			nuts[i][j]->is_binary_file = false;
 			nuts[i][j]->velocity = { 1e-7, 0, 0 };
 			nuts[i][j]->original_dir = glm::vec3(1, 0, 0);
+
+
+			if (i < 2) {
+				nuts[i][j]->position = glm::vec3(1.2f * cos(360/5 * TO_RADIAN * j), 1.2f * sin(360 / 5 * TO_RADIAN * j), 1.0);
+			}
+			else {
+				nuts[i][j]->position = glm::vec3(1.2f * cos(360 / 5 * TO_RADIAN * j), 1.2f * sin(360 / 5 * TO_RADIAN * j), -1.0);
+			}
+
+
+
 			objects.push_back(nuts[i][j]);
 		}
 	}
@@ -61,14 +72,31 @@ car::car(void)
 	wheels[3]->position = glm::vec3(3.9, -3.5, -4.5);
 
 
+	body->material.ambient_color[0] = 1.0f;
+	body->material.ambient_color[1] = 1.0f;
+	body->material.ambient_color[2] = 1.0f;
+	body->material.ambient_color[3] = 1.0f;
+
+	for (auto& w : wheels)
+	{
+		w->material.ambient_color[0] = 0;
+		w->material.ambient_color[1] = 0;
+		w->material.ambient_color[2] = 0;
+		w->material.ambient_color[3] = 1;
+	}
 
 
-	nuts[0][0]->position = glm::vec3(1.2f, 0.0f, 1.0);
-	nuts[1][0]->position = glm::vec3(1.2f, 0.0f, 1.0);
+	for (auto& i : nuts)
+	{
+		for (auto& j : i) {
+			j->material.ambient_color[0] = 1.0f;
+			j->material.ambient_color[1] = 0.0f;
+			j->material.ambient_color[2] = 0.0f;
+			j->material.ambient_color[3] = 1.0f;
+		}
+	}
 
 
-	nuts[2][0]->position = glm::vec3(1.2f, 0.0f, -1.0);
-	nuts[3][0]->position = glm::vec3(1.2f, 0.0f, -1.0);
 	//nuts[1][0]->position = glm::vec3(1.2f, 0.0f, 1.0);
 }
 
