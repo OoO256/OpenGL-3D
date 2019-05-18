@@ -1,4 +1,6 @@
 #pragma once
+#include <glm/gtc/matrix_transform.hpp> //translate, rotate, scale, lookAt, perspective, etc.
+#include <glm/gtc/matrix_inverse.hpp> // inverseTranspose, etc.
 
 // codes for the 'general' triangular-mesh object
 enum OBJ_TYPE { TYPE_V = 0, TYPE_VN, TYPE_VNT };
@@ -14,3 +16,5 @@ int read_geometry_file_txt(GLfloat **object, OBJ_TYPE obj_type, char *filename);
 glm::vec4 vec3_to_4(const glm::vec3 &  v, int x);
 
 glm::vec3 vec4_to_3(const glm::vec4 & v);
+
+void My_glTexImage2D_from_file(char *filename);

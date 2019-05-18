@@ -30,34 +30,43 @@
     <ClCompile Include="utility.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="car.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="carmera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="My_Shading.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Shaders\LoadShaders.h">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="object.hpp">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="utility.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
-      <Filter>소스 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="axes.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="object.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Shaders\LoadShaders.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="floor.h">
-      <Filter>소스 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="carmera.hpp">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="carmera.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="car.hpp">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="axes.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="utility.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="car.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,27 +1,22 @@
-#pragma once
-#include <iostream>
-#include <algorithm>
-#include <string>
-#include <cstring>
-#include <vector>
-#include <cstdio>
-#include <stdio.h>
-
-#include <GL/glew.h>
-#include <GL/freeglut.h>
-#include <FreeImage/FreeImage.h>
-#include <glm/gtc/matrix_transform.hpp> //translate, rotate, scale, lookAt, perspective, etc.
-#include <glm/gtc/matrix_inverse.hpp> // inverseTranspose, etc.
+#include "object.h"
 
 
 #include "Shaders/LoadShaders.h"
 #include "My_Shading.h"
 
-#include "utility.h"
+#define BUFFER_OFFSET(offset) ((GLvoid *) (offset))
 
 #define LOC_VERTEX 0
 #define LOC_NORMAL 1
 #define LOC_TEXCOORD 2
+
+// texture stuffs
+#define N_TEXTURES_USED 2
+#define TEXTURE_ID_FLOOR 0
+#define TEXTURE_ID_TIGER 1
+
+
+
 
 extern GLuint texture_names[N_TEXTURES_USED];
 constexpr int MAX_FILENAME = 512;
@@ -37,76 +32,16 @@ extern loc_Material_Parameters loc_material;
 extern GLint loc_ModelViewProjectionMatrix_TXPS, loc_ModelViewMatrix_TXPS, loc_ModelViewMatrixInvTrans_TXPS;
 extern GLint loc_texture, loc_flag_texture_mapping, loc_flag_fog;
 
-// codes for the 'general' triangular-mesh object
-//extern enum OBJ_TYPE { TYPE_V = 0, TYPE_VN, TYPE_VNT };
-// GEOM_OBJ_TYPE_V: (x, y, z)
-// GEOM_OBJ_TYPE_VN: (x, y, z, nx, ny, nz)
-// GEOM_OBJ_TYPE_VNT: (x, y, z, nx, ny, nz, s, t)
-//extern constexpr int elements_per_vertex[3] = { 3, 6, 8 };
-
-extern unsigned int timestamp_scene;
-
-class object
-{
-public:
-	GLuint vbo, vao;
-	Material_Parameters material;
-	OBJ_TYPE type;
-
-	glm::vec3 position;
-	glm::vec3 velocity;
-	glm::vec3 acceleration;
-	glm::vec3 scale;
-	glm::vec3 rotate;
-	unsigned int timestamp_last = 0;
-	glm::vec3 original_dir;
-
-	glm::mat4 additional;
-
-	const int num_frames;
-	int cur_frame;
-	std::vector<int>num_triangles;
-	std::vector<int>vertex_offset;
-	std::vector<GLfloat *>vertices;
-
-	std::string name;
-	std::string filename_vertices;
-	std::string filename_texture;
-	bool is_texture_on;
-	bool is_binary_file;
-
-	object* parent;
-
-	object() : num_frames(0) {};
-	object(int num_frames, std::string fv, OBJ_TYPE type, std::string ft);
-	void prepare(void);
-	void draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix);
-	void next_frame() { cur_frame = (cur_frame + 1) % num_frames; };
-
-
-	void updata_pos();
-
-	void move_forward(float s);
-	void turn_left(float rad);
-	//void align(glm::vec3);
-
-	~object();
-
-
-	glm::mat4 getModelMatrix();
-};
-
 object::object
 (
 	int num_frames
 	, std::string fv
 	, OBJ_TYPE type
-	, std::string ft = "Data/dynamic_objects/tiger/tiger_tex2.jpg"
 )
 	: num_frames(num_frames)
 	, filename_vertices(fv)
 	, type(type)
-	, filename_texture(ft)
+	, filename_texture("Data/dynamic_objects/tiger/tiger_tex2.jpg")
 	, position(0)
 	, material(tiger_material)
 	, velocity({ 0, 0, 1e-7 })
@@ -128,13 +63,13 @@ object::object
 }
 
 
-inline object::~object()
+object::~object()
 {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 }
 
-inline void object::prepare(void)
+void object::prepare(void)
 {
 	auto f = [](glm::mat4 m) { return (glm::mat4)(glm::translate(m, glm::vec3(0, 0, 0))); };
 
@@ -181,7 +116,7 @@ inline void object::prepare(void)
 
 	// as the geometry data exists now in graphics memory, ...
 	for (int i = 0; i < num_frames; i++)
-		free(vertices[i]);	
+		free(vertices[i]);
 
 	glVertexAttribPointer(LOC_VERTEX, 3, GL_FLOAT, GL_FALSE, bytes_per_vertex, BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(0);
@@ -214,7 +149,7 @@ inline void object::prepare(void)
 	}
 }
 
-inline void object::draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix) {
+void object::draw(const glm::mat4& ViewMatrix, const glm::mat4& ProjectionMatrix) {
 
 	glUniform4fv(loc_material.ambient_color, 1, material.ambient_color);
 	glUniform4fv(loc_material.diffuse_color, 1, material.diffuse_color);
@@ -247,13 +182,13 @@ glm::mat4 object::getModelMatrix()
 	if (parent != nullptr) {
 		ModelMatrix = ModelMatrix * parent->getModelMatrix();
 	}
-	
+
 	ModelMatrix = glm::translate(
 		ModelMatrix,
 		this->position
 	);
-	
-	if (glm::distance(glm::normalize(original_dir),glm::normalize(velocity))) {
+
+	if (glm::distance(glm::normalize(original_dir), glm::normalize(velocity))) {
 		auto axis = glm::cross(original_dir, glm::normalize(velocity));
 		float rad = acos(glm::dot(original_dir, velocity) / glm::length(original_dir) / glm::length(velocity));
 		ModelMatrix = glm::rotate(
@@ -276,17 +211,17 @@ void object::updata_pos() {
 	float dtime = timestamp_scene - timestamp_last;
 
 	position += velocity * dtime + 0.5f * acceleration * dtime * dtime;
-	velocity += (acceleration) * dtime;
+	velocity += (acceleration)* dtime;
 
 	timestamp_last = timestamp_scene;
 }
 
-inline void object::move_forward(float s)
+void object::move_forward(float s)
 {
 	position += s * normalize(velocity);
 }
 
-inline void object::turn_left(float rad)
+void object::turn_left(float rad)
 {
 	glm::vec3 forward = glm::normalize(velocity);
 	auto up = glm::vec3(0, 1, 0);

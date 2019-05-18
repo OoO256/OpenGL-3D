@@ -5,10 +5,10 @@
 #include "main.h"
 #include "axes.h"
 #include "floor.h"
-#include "object.hpp"
-#include "carmera.hpp"
+#include "object.h"
+#include "carmera.h"
 #include "utility.h"
-#include "car.hpp"
+#include "car.h"
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -50,38 +50,6 @@ int flag_texture_mapping;
 // GEOM_OBJ_TYPE_VNT: (x, y, z, nx, ny, nz, s, t)
 //extern constexpr int elements_per_vertex[3] = { 3, 6, 8 };
 
-void My_glTexImage2D_from_file(char *filename) {
-	FREE_IMAGE_FORMAT tx_file_format;
-	int tx_bits_per_pixel;
-	FIBITMAP *tx_pixmap, *tx_pixmap_32;
-
-	int width, height;
-	GLvoid *data;
-	
-	tx_file_format = FreeImage_GetFileType(filename, 0);
-	// assume everything is fine with reading texture from file: no error checking
-	tx_pixmap = FreeImage_Load(tx_file_format, filename);
-	tx_bits_per_pixel = FreeImage_GetBPP(tx_pixmap);
-
-	fprintf(stdout, " * A %d-bit texture was read from %s.\n", tx_bits_per_pixel, filename);
-	if (tx_bits_per_pixel == 32)
-		tx_pixmap_32 = tx_pixmap;
-	else {
-		fprintf(stdout, " * Converting texture from %d bits to 32 bits...\n", tx_bits_per_pixel);
-		tx_pixmap_32 = FreeImage_ConvertTo32Bits(tx_pixmap);
-	}
-
-	width = FreeImage_GetWidth(tx_pixmap_32);
-	height = FreeImage_GetHeight(tx_pixmap_32);
-	data = FreeImage_GetBits(tx_pixmap_32);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
-	fprintf(stdout, " * Loaded %dx%d RGBA texture into graphics memory.\n\n", width, height);
-
-	FreeImage_Unload(tx_pixmap_32);
-	if (tx_bits_per_pixel != 32)
-		FreeImage_Unload(tx_pixmap);
-}
 
 // fog stuffs
 // you could control the fog parameters interactively: FOG_COLOR, FOG_NEAR_DISTANCE, FOG_FAR_DISTANCE   

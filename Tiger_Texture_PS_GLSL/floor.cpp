@@ -1,5 +1,16 @@
 #include "floor.h"
-#include "main.h"
+#include "utility.h"
+
+#define BUFFER_OFFSET(offset) ((GLvoid *) (offset))
+
+#define LOC_VERTEX 0
+#define LOC_NORMAL 1
+#define LOC_TEXCOORD 2
+
+// texture stuffs
+#define N_TEXTURES_USED 2
+#define TEXTURE_ID_FLOOR 0
+#define TEXTURE_ID_TIGER 1
 
 // floor object
 #define TEX_COORD_EXTENT 1.0f

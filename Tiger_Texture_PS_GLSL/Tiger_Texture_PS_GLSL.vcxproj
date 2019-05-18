@@ -87,20 +87,23 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="axes.cpp" />
+    <ClCompile Include="car.cpp" />
+    <ClCompile Include="carmera.cpp" />
     <ClCompile Include="floor.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="Shaders\LoadShaders.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="axes.h" />
-    <ClInclude Include="car.hpp" />
-    <ClInclude Include="carmera.hpp" />
+    <ClInclude Include="car.h" />
+    <ClInclude Include="carmera.h" />
     <ClInclude Include="floor.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="My_Shading.h" />
     <ClInclude Include="Shaders\LoadShaders.h" />
-    <ClInclude Include="object.hpp" />
+    <ClInclude Include="object.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
   <ItemGroup>

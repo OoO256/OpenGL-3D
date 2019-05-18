@@ -1,24 +1,8 @@
-#pragma once
-#include <vector>
-#include "object.hpp"
+#include "car.h"
 #include "main.h"
 #include "utility.h"
 
 extern std::vector<object *>objects;
-
-class car
-{
-public:
-	object* body;
-	std::vector<object *> wheels;
-	std::vector<std::vector<object *>> nuts;
-
-	car(void);
-	~car();
-	void move_forward(float s);
-
-
-};
 
 car::car(void)
 {
@@ -29,7 +13,7 @@ car::car(void)
 	body->is_binary_file = false;
 	body->original_dir = glm::vec3(1, 0, 0);
 	body->velocity = { 1e-7, 0, 0 };
-	
+
 	objects.emplace_back(body);
 	nuts.resize(5);
 	for (int i = 0; i < 4; i++)
@@ -54,7 +38,7 @@ car::car(void)
 
 
 			if (i < 2) {
-				nuts[i][j]->position = glm::vec3(1.2f * cos(360/5 * TO_RADIAN * j), 1.2f * sin(360 / 5 * TO_RADIAN * j), 1.0);
+				nuts[i][j]->position = glm::vec3(1.2f * cos(360 / 5 * TO_RADIAN * j), 1.2f * sin(360 / 5 * TO_RADIAN * j), 1.0);
 			}
 			else {
 				nuts[i][j]->position = glm::vec3(1.2f * cos(360 / 5 * TO_RADIAN * j), 1.2f * sin(360 / 5 * TO_RADIAN * j), -1.0);
@@ -104,7 +88,7 @@ car::~car()
 {
 }
 
-inline void car::move_forward(float s)
+void car::move_forward(float s)
 {
 	body->move_forward(s);
 
