@@ -12,6 +12,7 @@
 #include "keyboard.h"
 
 #define _CRT_SECURE_NO_WARNINGS
+#define PI 3.141592
 
 #include "Shaders/LoadShaders.h"
 #include "My_Shading.h"
@@ -85,13 +86,13 @@ object* slected;
 std::vector<carmera>cams;
 carmera* cur_cam;
 
-void display(void) {
-	cams[1].move(slected->position + glm::vec3{0, 200, 0} - glm::normalize(slected->velocity) * 100.0f);
+void display(glm::mat4 view) {
+	cams[1].move(slected->position + glm::vec3{ 0, 200, 0 } -glm::normalize(slected->velocity) * 100.0f);
 	cams[1].center = slected->position + glm::normalize(slected->velocity) * 100.0f;
 
-	ViewMatrix = cur_cam->getView();
+	ViewMatrix = view;
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 
 	glUseProgram(h_ShaderProgram_simple);
 	ModelViewMatrix = glm::scale(ViewMatrix, glm::vec3(50.0f, 50.0f, 50.0f));
@@ -99,7 +100,7 @@ void display(void) {
 	glUniformMatrix4fv(loc_ModelViewProjectionMatrix_simple, 1, GL_FALSE, &ModelViewProjectionMatrix[0][0]);
 	glLineWidth(2.0f);
 	draw_axes();
-	glLineWidth(1.0f);	
+	glLineWidth(1.0f);
 
 	glUseProgram(h_ShaderProgram_simple);
 	ModelViewProjectionMatrix = glm::scale(ModelViewProjectionMatrix, glm::vec3(20.0f, 20.0f, 20.0f));
@@ -123,12 +124,30 @@ void display(void) {
 
 	glUseProgram(h_ShaderProgram_TXPS);
 	for (auto& obj : objects)
-	{		
+	{
 		obj->draw(ViewMatrix, ProjectionMatrix);
 	}
 
 	glUseProgram(0);
 
+	
+}
+
+void display(void) {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glViewport(0, 0, 800, 800);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	display(cams[0].getView());
+
+	glViewport(0, 0, 300, 300);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	display(cams[1].getView());
 	glutSwapBuffers();
 }
 
@@ -145,27 +164,30 @@ void timer_scene(int value) {
 			obj->next_frame();
 		}
 	}
-
 	float radius_heart = 20.0f;
 	float theta = timestamp_scene * 0.01;
 
-	
-	/*
+	float i = theta;
+
+	while (i > 21)
+	{
+		i -= 42;
+	}
 	tiger.position = glm::vec3(
-		16 * pow(sin(theta), 3) * radius_heart
-		, tiger.position.y
-		, (13 * cos(theta) - 5 * cos(2 * theta) - 2 * cos(3 * theta) - cos(4 * theta))*radius_heart
+		betman_x(i) * 25
+		, 0
+		, betman_y(i) * 25
 	);
 
 	tiger.velocity = glm::vec3(
-		16 * 3 * pow(sin(theta), 2) * cos(theta) * radius_heart
+		(betman_x(i + 0.01) - betman_x(i)) /0.01
 		, 0
-		, (-13 * sin(theta) + 10 * sin(2 * theta) + 6 * sin(3 * theta) + 4 * sin(4 * theta))*radius_heart
+		, (betman_y(i + 0.01) - betman_y(i)) /0.01
 	);
-	if(tiger.rotate.size() != 1)
-		tiger.rotate.pop_front();
-	tiger.rotate.push_front(align({ 0, 0, 1 }, glm::normalize(tiger.velocity)));
-	*/
+
+	tiger.rotate[0] = align({ 0, 0, 1 }, tiger.velocity);
+
+
 
 	car1->body->position = glm::vec3(
 		16 * pow(sin(theta), 3) * radius_heart
@@ -204,13 +226,16 @@ void timer_scene(int value) {
 	);
 
 	float d = acos(glm::dot(v1, v2) / glm::length(v1) / glm::length(v2));
-	printf("%f\n", d);
 	for (auto& w : car1->wheels)
 	{
 		w->rotate.push_front(
 			glm::rotate(glm::mat4(1), d*2, { 0, 1, 0 })
 		);
 	}
+
+
+
+
 
 
 	glutPostRedisplay();
@@ -450,8 +475,7 @@ void init_objects(void) {
 	cur_cam = &cams[0];
 
 	tiger.rotate.push_front(align({ 0, -1, 0 }, { 0, 0, 1 }));
-
-	//tiger.velocity = glm::vec3(0, 0, 0);
+	tiger.rotate.push_front(glm::mat4(1));		//tiger.velocity = glm::vec3(0, 0, 0);
 	
 
 
@@ -510,14 +534,56 @@ void init_objects(void) {
 	
 	for (float i = 0; i < 2 * 3.141592; i += 0.1)
 	{
-		objects.push_back( new object(1, "Data/static_objects/bus_vnt.geom", TYPE_VNT));
+		objects.push_back(new object(1, "Data/static_objects/bus_vnt.geom", TYPE_VNT));
+		
+
 		objects.back()->position = glm::vec3(
 			16 * pow(sin(i), 3) * 20
 			, 0
 			, (13 * cos(i) - 5 * cos(2 * i) - 2 * cos(3 * i) - cos(4 * i))* 20
 		);
+
+		objects.back()->velocity = glm::vec3(
+			16 * 3 * pow(sin(i + 0.1), 2) * cos(i + 0.1)
+			, 0
+			, (-13 * sin(i + 0.1) + 10 * sin(2 * (i + 0.1)) + 6 * sin(3 * (i + 0.1)) + 4 * sin(4 * (i + 0.1)))
+		);
+
+		objects.back()->rotate.push_front(align({ 0, 0, 1 }, objects.back()->velocity));
 	}
 	
+
+	for (float i = -21; i < 21; i += 0.2)
+	{
+		objects.push_back(new object(1, "Data/static_objects/txtdata/car_body_triangles_v.txt", TYPE_V));
+		objects.back()->is_binary_file = false;
+
+		objects.back()->material.specular_color[0] = 0;
+		objects.back()->material.specular_color[1] = 0;
+		objects.back()->material.specular_color[2] = 0;
+		objects.back()->material.specular_color[3] = 1;
+
+		float x = betman_x(i);
+		float y = betman_y(i);
+
+		float dr = 2 * sin(1.2 * i) * cos(1.2 * i) * 1.2 
+			+ 3 * pow(cos(6 * i), 2) * -sin(6*i) * 6;
+
+
+		objects.back()->position = glm::vec3(
+			betman_x(i) * 25
+			, 0
+			, betman_y(i) * 25
+		);
+
+		objects.back()->velocity = glm::vec3(
+			(betman_x(i+1) - betman_x(i)) * 25
+			, 0
+			, (betman_y(i + 1) - betman_y(i)) * 25
+		);
+
+		objects.back()->rotate.push_front(align({ 0, 0, 1 }, objects.back()->velocity));
+	}
 
 	/*
 	int obj_cnt = 0;

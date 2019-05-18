@@ -120,3 +120,32 @@ void My_glTexImage2D_from_file(char *filename) {
 	if (tx_bits_per_pixel != 32)
 		FreeImage_Unload(tx_pixmap);
 }
+
+#define ABS(x) abs(abs(t) + x)
+#define PI 3.141592
+
+float betman_x(float t) {
+	return abs(t) / t * (
+		1.0 / 2 * abs(t)
+		- 1.0 / 4 * ABS(-1)
+		+ 1.0 / 2 * ABS(-3)
+		- 3.0 / 4 * ABS(-5)
+		- 3.0 / 2 * ABS(-13)
+		+ 1.0 / 4 * ABS(-17)
+		+ 5.0 / 4 * ABS(-21)
+		+ 7 * sin(PI / 12 * (ABS(-5) - ABS(-8) + 3))
+		+ 1.0 / 100 * (pow(ABS(-8) - ABS(-13) - 5, 3) + 1.5)
+		);
+}
+float betman_y(float t) {
+	return 3.0 / 4 * ABS(-1)
+		- 3.0 / 4 * ABS(-3)
+		- 7.0 / 5 * ABS(-8)
+		+ 7.0 / 5 * ABS(-13)
+		+ 7.0 / 16 * pow(ABS(-3) - ABS(-5) - 2, 2)
+		+ 4.0 * sin(PI / 12 * (ABS(-5) - ABS(-8) - 3))
+		- 5.0 / 16 * pow(ABS(-13) - ABS(-17), 2)
+		- 1.0 / 4 * pow(ABS(-17) - ABS(-21) + 2, 2)
+		+ 11.5
+		;
+}

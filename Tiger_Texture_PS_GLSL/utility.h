@@ -20,3 +20,7 @@ glm::vec3 vec4_to_3(const glm::vec4 & v);
 glm::mat4 align(glm::vec3 from, glm::vec3 to);
 
 void My_glTexImage2D_from_file(char *filename);
+
+float betman_x(float t);
+
+float betman_y(float t);
