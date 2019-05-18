@@ -175,7 +175,7 @@ void timer_scene(int value) {
 	}
 	tiger.position = glm::vec3(
 		betman_x(i) * 25
-		, (tiger.cur_frame%6)*5
+		, sin(tiger.cur_frame/5.5*3.141592*2)*6 + 6
 		, betman_y(i) * 25
 	);
 
@@ -506,7 +506,7 @@ void init_objects(void) {
 	cow2.is_binary_file = false;
 
 	car1 = new car();
-	slected = car1->body;
+	slected = &tiger;
 	car1->body->rotate.push_front(align({ 1, 0, 0 }, { 0, 0, 1 }));
 
 	for (auto& w : car1->wheels)
