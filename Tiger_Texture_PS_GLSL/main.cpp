@@ -135,6 +135,8 @@ void display(void) {
 
 void timer_scene(int value) {
 	timestamp_scene = (timestamp_scene + 1) % UINT_MAX;
+
+	mykeyboard.action();
 	
 	if (timestamp_scene % 10 == 0) {
 		for (auto& obj : objects)
@@ -176,14 +178,21 @@ void cleanup(void) {
 	glDeleteTextures(N_TEXTURES_USED, texture_names);
 }
 
+
+
 void register_callbacks(void) {
 	glutDisplayFunc(display);
-	glutKeyboardFunc(keyboard);
 	glutReshapeFunc(reshape);
 	glutTimerFunc(100, timer_scene, 0);
 	glutCloseFunc(cleanup);
 
-	glutSpecialFunc(special_keyboard);
+
+	glutIgnoreKeyRepeat(true);
+	glutKeyboardFunc([](unsigned char key, int x, int y) { mykeyboard.key_down(key, x, y); });
+	glutKeyboardUpFunc([](unsigned char key, int x, int y) { mykeyboard.key_up(key, x, y); });
+	glutSpecialFunc([](int key, int x, int y) { mykeyboard.special_down(key, x, y); });
+	glutSpecialUpFunc([](int key, int x, int y) { mykeyboard.special_up(key, x, y); });
+
 }
 
 void prepare_shader_program(void) {
