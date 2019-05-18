@@ -9,6 +9,7 @@
 #include "carmera.h"
 #include "utility.h"
 #include "car.h"
+#include "keyboard.h"
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -82,9 +83,6 @@ car* car1;
 
 object* slected;
 
-// callbacks
-float PRP_distance_scale[6] = { 0.5f, 1.0f, 2.5f, 5.0f, 10.0f, 20.0f };
-
 std::vector<carmera>cams;
 carmera* cur_cam;
 
@@ -148,125 +146,6 @@ void timer_scene(int value) {
 	glutPostRedisplay();
 	if (is_time_running)
 		glutTimerFunc(10, timer_scene, 0);
-}
-
-
-void keyboard(unsigned char key, int x, int y) {
-	printf("key : %d\n", key);
-
-	static int flag_cull_face = 0;
-	static int PRP_distance_level = 4;
-
-	glm::vec4 position_EC;
-	glm::vec3 direction_EC;
-
-	if ((key >= '0') && (key <= '0' + NUMBER_OF_LIGHT_SUPPORTED - 1)) {
-		int light_ID = (int)(key - '0');
-
-		glUseProgram(h_ShaderProgram_TXPS);
-		light[light_ID].light_on = 1 - light[light_ID].light_on;
-		glUniform1i(loc_light[light_ID].light_on, light[light_ID].light_on);
-		glUseProgram(0);
-
-		glutPostRedisplay();
-	}
-
-	switch (key) {
-	case '0': 
-	case '1':
-		cur_cam = &cams[key - '0'];
-		break;
-	case 'a':
-		slected->turn_left(5 * TO_RADIAN);
-		car1->move_forward(5);
-		break;
-	case 's':
-		car1->move_forward(-5);
-		break;
-	case 'd':
-		slected->turn_left(-5 * TO_RADIAN);
-		car1->move_forward(5);
-		break;
-	case 'w':
-		car1->move_forward(5);
-		break;
-	case 'f':
-		flag_fog = 1 - flag_fog;
-		glUseProgram(h_ShaderProgram_TXPS);
-		glUniform1i(loc_flag_fog, flag_fog);
-		glUseProgram(0);
-		glutPostRedisplay();
-		break;
-	case 't':
-		flag_texture_mapping = 1 - flag_texture_mapping;
-		glUseProgram(h_ShaderProgram_TXPS);
-		glUniform1i(loc_flag_texture_mapping, flag_texture_mapping);
-		glUseProgram(0);
-		glutPostRedisplay();
-		break;
-	case 'c':
-		flag_cull_face = (flag_cull_face + 1) % 3;
-		switch (flag_cull_face) {
-		case 0:
-			glDisable(GL_CULL_FACE);
-			glutPostRedisplay();
-			break;
-		case 1: // cull back faces;
-			glCullFace(GL_BACK);
-			glEnable(GL_CULL_FACE);
-			glutPostRedisplay();
-			break;
-		case 2: // cull front faces;
-			glCullFace(GL_FRONT);
-			glEnable(GL_CULL_FACE);
-			glutPostRedisplay();
-			break;
-		}
-		break;
-	case 'p':
-		flag_polygon_fill = 1 - flag_polygon_fill;
-		if (flag_polygon_fill)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		else
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		glutPostRedisplay();
-		break;
-	case 44:
-		cams[0].move(-10, 0, 0);
-		break;
-	case 46:
-		cams[0].move(10, 0, 0);
-		break;
-	case 27: // ESC key
-		glutLeaveMainLoop(); // Incur destuction callback for cleanups
-		break;
-	}
-}
-
-void special_keyboard(int key, int x, int y) {
-	printf("special key entered : %d\n", key);
-
-	switch (key)
-	{
-	case GLUT_KEY_UP:
-		//do something here
-		cams[0].move(0, 0, 0.1);
-		break;
-	case GLUT_KEY_DOWN:
-		//do something here
-		cams[0].move(0, 0, -0.1);
-		break;
-	case GLUT_KEY_LEFT:
-		//do something here
-		cams[0].move(0, 0.1, 0);
-		break;
-	case GLUT_KEY_RIGHT:
-		//do something here
-		cams[0].move(0, -0.1, 0);
-		break;
-	default:
-		break;
-	}
 }
 
 void reshape(int width, int height) {

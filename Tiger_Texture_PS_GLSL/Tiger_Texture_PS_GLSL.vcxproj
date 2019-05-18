@@ -90,6 +90,7 @@
     <ClCompile Include="car.cpp" />
     <ClCompile Include="carmera.cpp" />
     <ClCompile Include="floor.cpp" />
+    <ClCompile Include="keyboard.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="Shaders\LoadShaders.cpp" />
     <ClCompile Include="main.cpp" />
@@ -100,6 +101,7 @@
     <ClInclude Include="car.h" />
     <ClInclude Include="carmera.h" />
     <ClInclude Include="floor.h" />
+    <ClInclude Include="keyboard.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="My_Shading.h" />
     <ClInclude Include="Shaders\LoadShaders.h" />
