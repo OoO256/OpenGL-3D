@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <deque>
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -23,11 +24,10 @@ public:
 	glm::vec3 velocity;
 	glm::vec3 acceleration;
 	glm::vec3 scale;
-	glm::vec3 rotate;
 	unsigned int timestamp_last = 0;
 	glm::vec3 original_dir;
 
-	glm::mat4 additional;
+	std::deque<glm::mat4> rotate;
 
 	const int num_frames;
 	int cur_frame;

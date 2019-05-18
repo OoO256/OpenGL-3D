@@ -13,7 +13,7 @@ extern car* car1;
 extern object* slected;
 extern std::vector<carmera>cams;
 extern carmera* cur_cam;
-
+extern int is_time_running;
 
 
 keyboard mykeyboard;
@@ -25,7 +25,8 @@ keyboard::keyboard()
 	special_state[GLUT_KEY_UP] = false;
 	special_state[GLUT_KEY_DOWN] = false; 
 	special_state[GLUT_KEY_RIGHT] = false;
-	special_state[GLUT_KEY_LEFT] = false;
+	special_state[GLUT_KEY_LEFT] = false; 
+	special_state[GLUT_KEY_END] = false;
 }
 
 keyboard::~keyboard()
@@ -62,7 +63,7 @@ void keyboard::action()
 		cur_cam = &cams[0];
 
 	if (key_state['1'])
-		cur_cam = &cams[0];
+		cur_cam = &cams[1];
 
 
 	if (key_state['a']) {
@@ -109,5 +110,8 @@ void keyboard::action()
 
 	if (special_state[GLUT_KEY_RIGHT]) {
 		cams[0].move(0, -0.01, 0);
+	}
+	if (special_state[GLUT_KEY_END]) {
+		is_time_running = !special_state[GLUT_KEY_END];
 	}
 }

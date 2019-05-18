@@ -70,7 +70,7 @@ std::vector<object *>objects;
 //object godzilla(1, "Data/static_objects/godzilla_vnt.geom", TYPE_VNT);
 //object ironman(1, "Data/static_objects/ironman_vnt.geom", TYPE_VNT);
 //object tank(1, "Data/static_objects/tank_vnt.geom", TYPE_VNT);
-//object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom", TYPE_VNT);
+object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom", TYPE_VNT);
 //object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom", TYPE_VNT);
 //object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom", TYPE_VNT);
 //object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom", TYPE_VNT);
@@ -132,6 +132,8 @@ void display(void) {
 	glutSwapBuffers();
 }
 
+float dt = 987654321;
+
 void timer_scene(int value) {
 	timestamp_scene = (timestamp_scene + 1) % UINT_MAX;
 
@@ -147,6 +149,24 @@ void timer_scene(int value) {
 	float radius_heart = 20.0f;
 	float theta = timestamp_scene * 0.01;
 
+	
+	/*
+	tiger.position = glm::vec3(
+		16 * pow(sin(theta), 3) * radius_heart
+		, tiger.position.y
+		, (13 * cos(theta) - 5 * cos(2 * theta) - 2 * cos(3 * theta) - cos(4 * theta))*radius_heart
+	);
+
+	tiger.velocity = glm::vec3(
+		16 * 3 * pow(sin(theta), 2) * cos(theta) * radius_heart
+		, 0
+		, (-13 * sin(theta) + 10 * sin(2 * theta) + 6 * sin(3 * theta) + 4 * sin(4 * theta))*radius_heart
+	);
+	if(tiger.rotate.size() != 1)
+		tiger.rotate.pop_front();
+	tiger.rotate.push_front(align({ 0, 0, 1 }, glm::normalize(tiger.velocity)));
+	*/
+
 	car1->body->position = glm::vec3(
 		16 * pow(sin(theta), 3) * radius_heart
 		, car1->body->position.y
@@ -156,20 +176,41 @@ void timer_scene(int value) {
 	car1->body->velocity = glm::vec3(
 		16 * 3 * pow(sin(theta), 2) * cos(theta) * radius_heart
 		, 0
-		, ( -13 * sin(theta) + 10 * sin(2 * theta) + 6 * sin(3 * theta) + 4 * sin(4 * theta))*radius_heart
+		, (-13 * sin(theta) + 10 * sin(2 * theta) + 6 * sin(3 * theta) + 4 * sin(4 * theta))*radius_heart
 	);
 
-	auto f = glm::normalize(glm::vec3(1, 0, 0));
-	auto up = glm::vec3(0, 1, 0);
-	auto r = glm::cross(f, up);
-	up = glm::cross(r, f);
+	if (car1->body->rotate.size() != 1)
+		car1->body->rotate.pop_front();
+	car1->body->rotate.push_front(align({ 0, 0, 1 }, glm::normalize(car1->body->velocity)));
+
+
 
 	for (auto& w : car1->wheels)
-	{
-		auto m_rotate = glm::rotate(glm::mat4(1), -5 * TO_RADIAN, r);
-		w->velocity = vec4_to_3(m_rotate * vec3_to_4(w->velocity, 0));
+	{	
+		w->rotate.pop_front();
+		w->rotate.front() *= align({ 1, 0, 0 }, { cos(-5 * TO_RADIAN), sin(-5 * TO_RADIAN), 0 });
 	}
+	   	 
+	auto v2 = glm::vec3(
+		16 * 3 * pow(sin(theta + 0.1), 2) * cos(theta + 0.1)
+		, 0
+		, (-13 * sin(theta + 0.1) + 10 * sin(2 * (theta + 0.1)) + 6 * sin(3 * (theta + 0.1)) + 4 * sin(4 * (theta + 0.1)))
+	);
 
+	auto v1 = glm::vec3(
+		16 * 3 * pow(sin(theta), 2) * cos(theta)
+		, 0
+		, (-13 * sin(theta) + 10 * sin(2 * theta) + 6 * sin(3 * theta) + 4 * sin(4 * theta))
+	);
+
+	float d = acos(glm::dot(v1, v2) / glm::length(v1) / glm::length(v2));
+	printf("%f\n", d);
+	for (auto& w : car1->wheels)
+	{
+		w->rotate.push_front(
+			glm::rotate(glm::mat4(1), d*2, { 0, 1, 0 })
+		);
+	}
 
 
 	glutPostRedisplay();
@@ -408,6 +449,12 @@ void init_objects(void) {
 	cams.emplace_back(1000, 1000, 1000);
 	cur_cam = &cams[0];
 
+	tiger.rotate.push_front(align({ 0, -1, 0 }, { 0, 0, 1 }));
+
+	//tiger.velocity = glm::vec3(0, 0, 0);
+	
+
+
 	/*
 	tiger.original_dir = { 0, -1, 0 };
 	//optimus.original_dir = { 1, 0, 0 };
@@ -436,9 +483,15 @@ void init_objects(void) {
 
 	car1 = new car();
 	slected = car1->body;
+	car1->body->rotate.push_front(align({ 1, 0, 0 }, { 0, 0, 1 }));
 
-	/*
+	for (auto& w : car1->wheels)
+	{
+		w->rotate.resize(2, glm::mat4(1));
+	}
+
 	objects.emplace_back(&tiger);
+	/*
 	objects.emplace_back(&ben);
 	objects.emplace_back(&wolf);
 	objects.emplace_back(&spider);
@@ -462,13 +515,6 @@ void init_objects(void) {
 			16 * pow(sin(i), 3) * 20
 			, 0
 			, (13 * cos(i) - 5 * cos(2 * i) - 2 * cos(3 * i) - cos(4 * i))* 20
-		);
-
-
-		objects.back()->velocity = glm::vec3(
-			16 * 3 * pow(sin(i), 2) * cos(i) * 20
-			, 0
-			, (-13 * sin(i) + 10 * sin(2 * i) + 6 * sin(3 * i) + 4 * sin(4 * i))*20
 		);
 	}
 	

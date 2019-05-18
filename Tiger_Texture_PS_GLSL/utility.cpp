@@ -80,6 +80,13 @@ glm::vec3 vec4_to_3(const glm::vec4 &  v) {
 	return { v.x, v.y, v.z };
 }
 
+glm::mat4 align(glm::vec3 from, glm::vec3 to) {
+	auto axis = glm::cross(from, to);
+	float angle = acos( glm::dot(from, to) / glm::length(from) / glm::length(to));
+
+	return glm::rotate(glm::mat4(1), angle, axis);
+}
+
 
 void My_glTexImage2D_from_file(char *filename) {
 	FREE_IMAGE_FORMAT tx_file_format;

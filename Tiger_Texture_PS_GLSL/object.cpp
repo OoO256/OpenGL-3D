@@ -47,7 +47,6 @@ object::object
 	, velocity({ 0, 0, 1e-7 })
 	, acceleration(0)
 	, scale(1)
-	, rotate(0)
 	, num_triangles(num_frames)
 	, vertex_offset(num_frames)
 	, vertices(num_frames)
@@ -57,7 +56,6 @@ object::object
 	, timestamp_last(timestamp_scene)
 	, original_dir(0, 0, 1)
 	, parent(nullptr)
-	, additional(1)
 {
 
 }
@@ -188,14 +186,9 @@ glm::mat4 object::getModelMatrix()
 		this->position
 	);
 
-	if (glm::distance(glm::normalize(original_dir), glm::normalize(velocity))) {
-		auto axis = glm::cross(original_dir, glm::normalize(velocity));
-		float rad = acos(glm::dot(original_dir, velocity) / glm::length(original_dir) / glm::length(velocity));
-		ModelMatrix = glm::rotate(
-			ModelMatrix,
-			rad,
-			axis
-		);
+	for (auto& m : rotate)
+	{
+		ModelMatrix *= m;
 	}
 
 	ModelMatrix = glm::scale(

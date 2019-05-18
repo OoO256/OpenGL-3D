@@ -17,4 +17,6 @@ glm::vec4 vec3_to_4(const glm::vec3 &  v, int x);
 
 glm::vec3 vec4_to_3(const glm::vec4 & v);
 
+glm::mat4 align(glm::vec3 from, glm::vec3 to);
+
 void My_glTexImage2D_from_file(char *filename);
