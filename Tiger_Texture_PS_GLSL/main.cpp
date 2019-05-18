@@ -175,7 +175,7 @@ void timer_scene(int value) {
 	}
 	tiger.position = glm::vec3(
 		betman_x(i) * 25
-		, 0
+		, (tiger.cur_frame%6)*5
 		, betman_y(i) * 25
 	);
 
