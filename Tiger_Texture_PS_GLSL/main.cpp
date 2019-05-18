@@ -63,22 +63,21 @@ float rotation_angle_tiger = 0.0f;
 
 // my object
 std::vector<object *>objects;
-object optimus(1, "Data/static_objects/optimus_vnt.geom", TYPE_VNT);
-object cow(1, "Data/static_objects/cow_vn.geom", TYPE_VNT);
-object bike(1, "Data/static_objects/bike_vnt.geom", TYPE_VNT);
-object bus(1, "Data/static_objects/bus_vnt.geom", TYPE_VNT);
-object godzilla(1, "Data/static_objects/godzilla_vnt.geom", TYPE_VNT);
-object ironman(1, "Data/static_objects/ironman_vnt.geom", TYPE_VNT);
-object tank(1, "Data/static_objects/tank_vnt.geom", TYPE_VNT);
-
-object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom", TYPE_VNT);
-object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom", TYPE_VNT);
-object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom", TYPE_VNT);
-object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom", TYPE_VNT);
+//object optimus(1, "Data/static_objects/optimus_vnt.geom", TYPE_VNT);
+//object cow(1, "Data/static_objects/cow_vn.geom", TYPE_VNT);
+//object bike(1, "Data/static_objects/bike_vnt.geom", TYPE_VNT);
+//object bus(1, "Data/static_objects/bus_vnt.geom", TYPE_VNT);
+//object godzilla(1, "Data/static_objects/godzilla_vnt.geom", TYPE_VNT);
+//object ironman(1, "Data/static_objects/ironman_vnt.geom", TYPE_VNT);
+//object tank(1, "Data/static_objects/tank_vnt.geom", TYPE_VNT);
+//object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom", TYPE_VNT);
+//object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom", TYPE_VNT);
+//object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom", TYPE_VNT);
+//object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom", TYPE_VNT);
 
 
 object cow2(1, "Data/static_objects/txtdata/cow_triangles_v.txt", TYPE_V);
-object body(1, "Data/static_objects/txtdata/car_body_triangles_v.txt", TYPE_V);
+//object body(1, "Data/static_objects/txtdata/car_body_triangles_v.txt", TYPE_V);
 car* car1;
 
 object* slected;
@@ -87,8 +86,8 @@ std::vector<carmera>cams;
 carmera* cur_cam;
 
 void display(void) {
-	cams[1].move(ben.position + glm::vec3{0, 200, 0} - glm::normalize(ben.velocity) * 100.0f);
-	cams[1].center = ben.position + glm::normalize(ben.velocity) * 100.0f;
+	cams[1].move(slected->position + glm::vec3{0, 200, 0} - glm::normalize(slected->velocity) * 100.0f);
+	cams[1].center = slected->position + glm::normalize(slected->velocity) * 100.0f;
 
 	ViewMatrix = cur_cam->getView();
 
@@ -144,6 +143,34 @@ void timer_scene(int value) {
 			obj->next_frame();
 		}
 	}
+
+	float radius_heart = 20.0f;
+	float theta = timestamp_scene * 0.01;
+
+	car1->body->position = glm::vec3(
+		16 * pow(sin(theta), 3) * radius_heart
+		, car1->body->position.y
+		, (13 * cos(theta) - 5 * cos(2 * theta) - 2 * cos(3 * theta) - cos(4 * theta))*radius_heart
+	);
+
+	car1->body->velocity = glm::vec3(
+		16 * 3 * pow(sin(theta), 2) * cos(theta) * radius_heart
+		, 0
+		, ( -13 * sin(theta) + 10 * sin(2 * theta) + 6 * sin(3 * theta) + 4 * sin(4 * theta))*radius_heart
+	);
+
+	auto f = glm::normalize(glm::vec3(1, 0, 0));
+	auto up = glm::vec3(0, 1, 0);
+	auto r = glm::cross(f, up);
+	up = glm::cross(r, f);
+
+	for (auto& w : car1->wheels)
+	{
+		auto m_rotate = glm::rotate(glm::mat4(1), -5 * TO_RADIAN, r);
+		w->velocity = vec4_to_3(m_rotate * vec3_to_4(w->velocity, 0));
+	}
+
+
 
 	glutPostRedisplay();
 	if (is_time_running)
@@ -381,6 +408,7 @@ void init_objects(void) {
 	cams.emplace_back(1000, 1000, 1000);
 	cur_cam = &cams[0];
 
+	/*
 	tiger.original_dir = { 0, -1, 0 };
 	//optimus.original_dir = { 1, 0, 0 };
 	cow.original_dir = { 1, 0, 0 };
@@ -400,6 +428,7 @@ void init_objects(void) {
 	ironman.scale = glm::vec3(20.0f, 20.0f, 20.0f);
 	tank.scale = glm::vec3(10.0f, 10.0f, 10.0f);
 	tank.rotate = glm::vec3(-90.0f*TO_RADIAN, 0, 0);
+	*/
 
 	cow2.position = { 0, 200, 0 };
 	cow2.scale = glm::vec3(100, 100, 100);
@@ -426,7 +455,22 @@ void init_objects(void) {
 	objects.emplace_back(&cow2);
 	*/
 	
+	for (float i = 0; i < 2 * 3.141592; i += 0.1)
+	{
+		objects.push_back( new object(1, "Data/static_objects/bus_vnt.geom", TYPE_VNT));
+		objects.back()->position = glm::vec3(
+			16 * pow(sin(i), 3) * 20
+			, 0
+			, (13 * cos(i) - 5 * cos(2 * i) - 2 * cos(3 * i) - cos(4 * i))* 20
+		);
 
+
+		objects.back()->velocity = glm::vec3(
+			16 * 3 * pow(sin(i), 2) * cos(i) * 20
+			, 0
+			, (-13 * sin(i) + 10 * sin(2 * i) + 6 * sin(3 * i) + 4 * sin(4 * i))*20
+		);
+	}
 	
 
 	/*
