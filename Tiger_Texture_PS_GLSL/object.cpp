@@ -53,6 +53,7 @@ object::object
 	, timestamp_last(timestamp_scene)
 	, original_dir(0, 0, 1)
 	, parent(nullptr)
+	, vel_angle(0)
 {
 
 }
@@ -199,15 +200,41 @@ glm::mat4 object::getModelMatrix()
 void object::updata_pos() {
 	float dtime = (timestamp_scene - timestamp_last)*0.01;
 
-	position += velocity * dtime + 0.5f * acceleration * dtime * dtime;
-	velocity += (acceleration)* dtime;
+	auto acceleration_without_gravity = acceleration;
+	acceleration_without_gravity.y = 0;
+
+
+	if (position.y < 1) {
+		position += velocity * dtime + 0.5f * acceleration_without_gravity * dtime * dtime;
+		velocity += (acceleration_without_gravity)* dtime;
+	}
+	else {
+		position += velocity * dtime + 0.5f * acceleration * dtime * dtime;
+		velocity += (acceleration)* dtime;
+	}
+
+	if (position.y < 0) {
+		position.y = 0;
+
+		velocity.y *= -0.3;
+	}
+
+	auto m_rotate = glm::rotate(glm::mat4(1), vel_angle, { 0, 1 , 0 });
+
+	velocity = vec4_to_3(m_rotate * vec3_to_4(velocity, 0));
+
+	velocity.x *= 0.99;
+	velocity.z *= 0.99;
 
 	timestamp_last = timestamp_scene;
 }
 
 void object::move_forward(float s)
 {
-	position += s * normalize(velocity);
+	auto velocity_without_y = velocity;
+	velocity_without_y.y = 0;
+
+	position += s * normalize(velocity_without_y);
 }
 
 void object::turn_left(float rad)

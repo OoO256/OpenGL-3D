@@ -49,9 +49,9 @@ void prepare_floor(void) { // Draw coordinate axes.
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	material_floor.ambient_color[0] = 1.0f;
-	material_floor.ambient_color[1] = 1.0f;
-	material_floor.ambient_color[2] = 1.0f;
+	material_floor.ambient_color[0] = 0.1f;
+	material_floor.ambient_color[1] = 0.1f;
+	material_floor.ambient_color[2] = 0.1f;
 	material_floor.ambient_color[3] = 1.0f;
 
 	material_floor.diffuse_color[0] = 0.2f;

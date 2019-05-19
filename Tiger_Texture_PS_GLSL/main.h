@@ -10,6 +10,8 @@ constexpr float TO_RADIAN = 0.01745329252f;
 constexpr float TO_DEGREE = 57.295779513f;
 
 
+void set_up_scene_lights(void);
+
 #define BUFFER_OFFSET(offset) ((GLvoid *) (offset))
 
 #define LOC_VERTEX 0

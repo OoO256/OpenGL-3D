@@ -74,7 +74,6 @@ glm::mat4 carmera::getProj()
 
 void carmera::move_forward(float d) {
 	auto f = glm::normalize(center - pos);
-	auto up = glm::vec3(0, 1, 0);
 	auto r = glm::cross(f, up);
 
 	center += d * f;
@@ -87,7 +86,6 @@ void carmera::move_forward(float d) {
 
 void carmera::move_right(float d) {
 	auto f = glm::normalize(center - pos);
-	auto up = glm::vec3(0, 1, 0);
 	auto r = glm::cross(f, up);
 
 	center += d * r;
@@ -100,7 +98,6 @@ void carmera::move_right(float d) {
 
 void carmera::move_up(float d) {
 	auto f = glm::normalize(center - pos);
-	auto up = glm::vec3(0, 1, 0);
 	auto r = glm::cross(f, up);
 
 	center += d * up;
@@ -112,7 +109,6 @@ void carmera::move_up(float d) {
 
 
 void carmera::turn_left(float d) {
-	auto up = glm::vec3(0, 1, 0);
 
 	auto v2 = glm::rotate(glm::mat4(1), d, up)
 		* glm::vec4(center.x - pos.x, center.y - pos.y, center.z - pos.z, 0);

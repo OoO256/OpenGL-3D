@@ -17,6 +17,8 @@ extern int is_time_running;
 extern float fovy;
 extern bool togle[3];
 
+extern object ironman;
+
 
 keyboard mykeyboard;
 
@@ -177,8 +179,23 @@ void keyboard::action()
 		if (key_state['w']) {
 			slected->move_forward(5);
 		}
+
+		if (key_state[' ']) {
+			//slected->velocity.y += 100;
+		}
 	}
 
+	if (key_state['u']) {
+		ironman.velocity.y = 300;
+	}
+
+	if (key_state['i']) {
+		ironman.vel_angle += 0.01;
+	}
+
+	if (key_state['o']) {
+		ironman.vel_angle = 0;
+	}
 
 	if (key_state[44]) {
 		cams[0].move(-1, 0, 0);

@@ -10,6 +10,7 @@
 #include "utility.h"
 #include "car.h"
 #include "keyboard.h"
+//#include "light.h"
 
 #define _CRT_SECURE_NO_WARNINGS
 #define PI 3.141592
@@ -41,6 +42,8 @@ glm::mat4 ViewMatrix, ProjectionMatrix;
 // lights in scene
 Light_Parameters light[NUMBER_OF_LIGHT_SUPPORTED];
 
+//std::vector<Light>lights;
+
 // texture stuffs
 GLuint texture_names[N_TEXTURES_USED];
 int flag_texture_mapping;
@@ -66,11 +69,10 @@ float rotation_angle_tiger = 0.0f;
 std::vector<object *>objects;
 //object optimus(1, "Data/static_objects/optimus_vnt.geom", TYPE_VNT);
 //object cow(1, "Data/static_objects/cow_vn.geom", TYPE_VNT);
-//object bike(1, "Data/static_objects/bike_vnt.geom", TYPE_VNT);
+object bike(1, "Data/static_objects/bike_vnt.geom", TYPE_VNT);
 //object bus(1, "Data/static_objects/bus_vnt.geom", TYPE_VNT);
 //object godzilla(1, "Data/static_objects/godzilla_vnt.geom", TYPE_VNT);
 object ironman(1, "Data/static_objects/ironman_vnt.geom", TYPE_VNT);
-object tank(1, "Data/static_objects/tank_vnt.geom", TYPE_VNT);
 object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom", TYPE_VNT);
 object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom", TYPE_VNT);
 object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom", TYPE_VNT);
@@ -96,6 +98,7 @@ void display(carmera* cam) {
 
 	ViewMatrix = cam->getView();
 	ProjectionMatrix = cam->getProj();
+	set_up_scene_lights();
 
 	glClearColor(0x8C / 225.0, 0xC4 / 225.0, 0xCD / 225.0, 0.5);
 
@@ -141,6 +144,7 @@ void display(carmera* cam) {
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	
+	glClearColor(0 / 225.0, 0 / 225.0, 0 / 225.0, 0.5);
 	glViewport(0, 0, 800, 800);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -189,6 +193,24 @@ void timer_scene(int value) {
 
 	mykeyboard.action();
 	
+
+	if (glm::distance(ben.position, spider.position) < 50) {
+		float e = 0.9;
+
+		glm::vec3 v1 = ben.velocity;
+		glm::vec3 v2 = spider.velocity;
+
+		float m1 = 1;
+		float m2 = 10;
+
+		ben.velocity = v1 - m2 * (1 + e) / (m1 + m2) * (v1 - v2);
+		spider.velocity = v2 + m1 * (1 + e) / (m1 + m2) * (v1 - v2);
+
+		ben.velocity.y += 200;
+	}
+
+
+
 	if (timestamp_scene % 10 == 0) {
 		for (auto& obj : objects)
 		{
@@ -200,22 +222,38 @@ void timer_scene(int value) {
 		ben.next_frame();
 	}
 	
+	ben.updata_pos();
+
+	auto ben_foward = ben.velocity;
+	ben_foward.y = 0;
 	if (ben.rotate.empty())
 		ben.rotate.push_front(glm::mat4(1));
 
-	ben.rotate.front() = align({ 0, 0, 1 }, ben.velocity);
+	ben.rotate.front() = align({ 0, 0, 1 }, ben_foward);
 
-	
-	spider.acceleration = glm::normalize(ben.position - spider.position) * 100.0f;
-	spider.updata_pos();
-	
-	if (spider.rotate.empty())
-		spider.rotate.push_front(glm::mat4(1));
+	if (mykeyboard.key_state['t']) {
 
-	spider.rotate.front() = align({ 0, 0, 1 }, spider.velocity);
+		spider.acceleration = glm::normalize(ben.position - spider.position) * 1000.0f;
+		spider.updata_pos();
+
+		if (spider.rotate.empty())
+			spider.rotate.push_front(glm::mat4(1));
+
+		spider.rotate.front() = align({ 0, 0, 1 }, spider.velocity);
+	}
+	else
+	{
+		spider.timestamp_last = timestamp_scene;
+	}
 
 
+	ironman.updata_pos();
+	if (ironman.rotate.empty())
+		ironman.rotate.push_front(glm::mat4(1));
+	auto ironman_foward = ironman.velocity;
+	ironman_foward.y = 0;
 
+	ironman.rotate.front() = align({ 0, 0, 1 }, ironman_foward);
 
 	float radius_heart = 20.0f;
 	float theta = timestamp_scene * 0.01;
@@ -401,14 +439,16 @@ void initialize_lights_and_material(void) { // follow OpenGL conventions for ini
 		glUniform1i(loc_light[i].light_on, 0); // turn off all lights initially
 		glUniform4f(loc_light[i].position, 0.0f, 0.0f, 1.0f, 0.0f);
 		glUniform4f(loc_light[i].ambient_color, 0.0f, 0.0f, 0.0f, 1.0f);
+
 		if (i == 0) {
 			glUniform4f(loc_light[i].diffuse_color, 1.0f, 1.0f, 1.0f, 1.0f);
-			glUniform4f(loc_light[i].specular_color, 1.0f, 1.0f, 1.0f, 1.0f);
+			glUniform4f(loc_light[i].specular_color, 1.0f, 1.0f, 1.0f, 1.0f);			
 		}
 		else {
 			glUniform4f(loc_light[i].diffuse_color, 0.0f, 0.0f, 0.0f, 1.0f);
 			glUniform4f(loc_light[i].specular_color, 0.0f, 0.0f, 0.0f, 1.0f);
 		}
+
 		glUniform3f(loc_light[i].spot_direction, 0.0f, 0.0f, -1.0f);
 		glUniform1f(loc_light[i].spot_exponent, 0.0f); // [0.0, 128.0]
 		glUniform1f(loc_light[i].spot_cutoff_angle, 180.0f); // [0.0, 90.0] or 180.0 (180.0 for no spot light effect)
@@ -461,8 +501,8 @@ void set_up_scene_lights(void) {
 	light[0].position[0] = 0.0f; light[0].position[1] = 100.0f; 	// point light position in EC
 	light[0].position[2] = 0.0f; light[0].position[3] = 1.0f;
 
-	light[0].ambient_color[0] = 0.13f; light[0].ambient_color[1] = 0.13f;
-	light[0].ambient_color[2] = 0.13f; light[0].ambient_color[3] = 1.0f;
+	light[0].ambient_color[0] = 0.3f; light[0].ambient_color[1] = 0.3f;
+	light[0].ambient_color[2] = 0.3f; light[0].ambient_color[3] = 1.0f;
 
 	light[0].diffuse_color[0] = 0.5f; light[0].diffuse_color[1] = 0.5f;
 	light[0].diffuse_color[2] = 0.5f; light[0].diffuse_color[3] = 1.5f;
@@ -489,6 +529,58 @@ void set_up_scene_lights(void) {
 	light[1].spot_cutoff_angle = 20.0f;
 	light[1].spot_exponent = 8.0f;
 
+	// spot_light_WC: use light 2
+	auto f = ironman.velocity;
+	f.y = 0;
+
+	auto r = glm::cross(glm::normalize(f), { 0, 1, 0 });
+	auto p1 = ironman.position + r * 35.0f + glm::vec3(0, 70, 0); 
+	auto p2 = ironman.position - r * 35.0f + glm::vec3(0, 70, 0);
+
+	auto l1 = glm::vec3(0, -1, 0) + glm::normalize(r)*0.3f;
+	auto l2 = glm::vec3(0, -1, 0) + glm::normalize(r)*-0.3f;
+
+
+	light[2].light_on = 1;
+	light[2].position[0] = p1.x; light[2].position[1] = p1.y; // spot light position in WC
+	light[2].position[2] = p1.z; light[2].position[3] = 1.0f;
+
+	light[2].ambient_color[0] = 1; light[2].ambient_color[1] = 0;
+	light[2].ambient_color[2] = 0; light[2].ambient_color[3] = 1.0f;
+
+	light[2].diffuse_color[0] = 1; light[2].diffuse_color[1] = 0;
+	light[2].diffuse_color[2] = 0; light[2].diffuse_color[3] = 1.0f;
+
+	light[2].specular_color[0] = 1; light[2].specular_color[1] = 0;
+	light[2].specular_color[2] = 0; light[2].specular_color[3] = 1.0f;
+
+	light[2].spot_direction[0] = l1.x; light[2].spot_direction[1] = l1.y; // spot light direction in WC
+	light[2].spot_direction[2] = l1.z;
+	light[2].spot_cutoff_angle = 20.0f;
+	light[2].spot_exponent = 8.0f;
+
+
+
+	light[3].light_on = 1;
+	light[3].position[0] = p2.x; light[3].position[1] = p2.y; // spot light position in WC
+	light[3].position[2] = p2.z; light[3].position[3] = 1.0f;
+
+	light[3].ambient_color[0] = 0; light[3].ambient_color[1] = 0;
+	light[3].ambient_color[2] = 1; light[3].ambient_color[3] = 1.0f;
+
+	light[3].diffuse_color[0] = 0; light[3].diffuse_color[1] = 0;
+	light[3].diffuse_color[2] = 1; light[3].diffuse_color[3] = 1.0f;
+
+	light[3].specular_color[0] = 0; light[3].specular_color[1] = 0;
+	light[3].specular_color[2] = 1; light[3].specular_color[3] = 1.0f;
+
+	light[3].spot_direction[0] = l2.x; light[3].spot_direction[1] = l2.y; // spot light direction in WC
+	light[3].spot_direction[2] = l2.z;
+	light[3].spot_cutoff_angle = 20.0f;
+	light[3].spot_exponent = 8.0f;
+
+
+
 	glUseProgram(h_ShaderProgram_TXPS);
 	glUniform1i(loc_light[0].light_on, light[0].light_on);
 	glUniform4fv(loc_light[0].position, 1, light[0].position);
@@ -512,6 +604,64 @@ void set_up_scene_lights(void) {
 	glUniform3fv(loc_light[1].spot_direction, 1, &direction_EC[0]); 
 	glUniform1f(loc_light[1].spot_cutoff_angle, light[1].spot_cutoff_angle);
 	glUniform1f(loc_light[1].spot_exponent, light[1].spot_exponent);
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+	glUniform1i(loc_light[2].light_on, light[2].light_on);
+	// need to supply position in EC for shading
+	position_EC = ViewMatrix * glm::vec4(light[2].position[0], light[2].position[1],
+		light[2].position[2], light[2].position[3]);
+	glUniform4fv(loc_light[2].position, 1, &position_EC[0]);
+	glUniform4fv(loc_light[2].ambient_color, 1, light[2].ambient_color);
+	glUniform4fv(loc_light[2].diffuse_color, 1, light[2].diffuse_color);
+	glUniform4fv(loc_light[2].specular_color, 1, light[2].specular_color);
+	// need to supply direction in EC for shading in this example shader
+	// note that the viewing transform is a rigid body transform
+	// thus transpose(inverse(mat3(ViewMatrix)) = mat3(ViewMatrix)
+	direction_EC = glm::mat3(ViewMatrix) * glm::vec3(light[2].spot_direction[0], light[2].spot_direction[1],
+		light[2].spot_direction[2]);
+	glUniform3fv(loc_light[2].spot_direction, 1, &direction_EC[0]);
+	glUniform1f(loc_light[2].spot_cutoff_angle, light[2].spot_cutoff_angle);
+	glUniform1f(loc_light[2].spot_exponent, light[2].spot_exponent);
+
+
+
+
+	glUniform1i(loc_light[3].light_on, light[3].light_on);
+	// need to supply position in EC for shading
+	position_EC = ViewMatrix * glm::vec4(light[3].position[0], light[3].position[1],
+		light[3].position[2], light[3].position[3]);
+	glUniform4fv(loc_light[3].position, 1, &position_EC[0]);
+	glUniform4fv(loc_light[3].ambient_color, 1, light[3].ambient_color);
+	glUniform4fv(loc_light[3].diffuse_color, 1, light[3].diffuse_color);
+	glUniform4fv(loc_light[3].specular_color, 1, light[3].specular_color);
+	// need to supply direction in EC for shading in this example shader
+	// note that the viewing transform is a rigid body transform
+	// thus transpose(inverse(mat3(ViewMatrix)) = mat3(ViewMatrix)
+	direction_EC = glm::mat3(ViewMatrix) * glm::vec3(light[3].spot_direction[0], light[3].spot_direction[1],
+		light[3].spot_direction[2]);
+	glUniform3fv(loc_light[3].spot_direction, 1, &direction_EC[0]);
+	glUniform1f(loc_light[3].spot_cutoff_angle, light[3].spot_cutoff_angle);
+	glUniform1f(loc_light[3].spot_exponent, light[3].spot_exponent);
+
+
+
+
+
+
+
 	glUseProgram(0);
 }
 
@@ -522,16 +672,20 @@ void init_objects(void) {
 
 	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
 	spider.scale = glm::vec3(50.0f, -50.0f, 50.0f);
-	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
-	tank.scale = glm::vec3(10.0f, 10.0f, 10.0f);
+	wolf.scale = glm::vec3(200.0f, 100.0f, 100.0f);
+
+	bike.scale = glm::vec3(20.0f, 20.0f, 20.0f);
 	//tank.rotate.push_front( align(glm::vec3(-90.0f*TO_RADIAN, 0, 0), { 0, 0, 1 }) );
 	ironman.scale = glm::vec3(20.0f, 20.0f, 20.0f);
 
-	ben.position = { 300, 0, 0 };
-	spider.position = { 200, 0, 0 };
-	wolf.position = { 100, 0, 0 };
-	tank.position = { -100, 0, 0 };
-	ironman.position = { -200, 0, 0 };
+	ben.position = { -500, 0, -500 };
+	ben.acceleration = { 0, -1000, 0 };
+	spider.position = { -500, 0, 0 };
+	spider.acceleration = { 0, -500, 0 };
+	wolf.position = { 0, 0, -500 };
+	ironman.position = { 0, 0, 0 };
+	ironman.acceleration = { 0, -100, 0 }; 
+	ironman.velocity = { 0, 0, 1 };
 
 	slected = &ben;
 
@@ -549,7 +703,6 @@ void init_objects(void) {
 	optimus.scale = glm::vec3(0.1f, 0.1f, 0.1f);
 	cow.scale = glm::vec3(80.0f, 80.0f, 80.0f);
 
-	bike.scale = glm::vec3(20.0f, 20.0f, 20.0f);
 	bus.scale = glm::vec3(3.0f, 3.0f, 3.0f);
 	godzilla.scale = glm::vec3(0.5f, 0.5f, 0.5f);
 	tank.rotate = glm::vec3(-90.0f*TO_RADIAN, 0, 0);
@@ -569,6 +722,7 @@ void init_objects(void) {
 	
 	cams.emplace_back(1000, 1000, 1000);
 	cams.emplace_back(700, 700, 700);
+	//cams.back().up = glm::vec3(0, 0, 1);
 	cams.emplace_back(car1->body->position + glm::vec3(0, 100, 0));
 	cams.emplace_back(tiger.position + glm::vec3(0, -88, 62));
 
@@ -583,7 +737,7 @@ void init_objects(void) {
 	objects.emplace_back(&wolf);
 	objects.emplace_back(&spider);
 	objects.emplace_back(&ironman);
-	objects.emplace_back(&tank);
+	objects.emplace_back(&bike);
 	/*
 	objects.emplace_back(&optimus);
 	objects.emplace_back(&cow);

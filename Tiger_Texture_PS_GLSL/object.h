@@ -26,6 +26,7 @@ public:
 	glm::vec3 scale;
 	unsigned int timestamp_last = 0;
 	glm::vec3 original_dir;
+	float vel_angle;
 
 	std::deque<glm::mat4> rotate;
 
