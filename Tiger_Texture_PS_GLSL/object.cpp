@@ -196,7 +196,6 @@ glm::mat4 object::getModelMatrix()
 		this->scale
 	);
 
-
 	return ModelMatrix;
 }
 

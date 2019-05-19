@@ -243,13 +243,16 @@ void timer_scene(int value) {
 		glutTimerFunc(10, timer_scene, 0);
 }
 
+float fovy = 45.0f;
+float aspect_ratio;
+
 void reshape(int width, int height) {
-	float aspect_ratio;
+	
 
 	glViewport(0, 0, width, height);
 	
 	aspect_ratio = (float) width / height;
-	ProjectionMatrix = glm::perspective(45.0f*TO_RADIAN, aspect_ratio, 100.0f, 20000.0f);
+	ProjectionMatrix = glm::perspective(fovy*TO_RADIAN, aspect_ratio, 100.0f, 20000.0f);
 	/*
 	glm::mat4 projectionMatrix = glm::perspective(
 	glm::radians(FoV),  // 수직방향 시야각입니다 : "줌"의 크기. "카메라 렌즈" 를 생각해보세요. 이들은 보통 90도 (엑스트라 와이드) 에서 30도 (크게 확대한 경우) 사이에 있습니다
@@ -286,6 +289,13 @@ void register_callbacks(void) {
 	glutSpecialFunc([](int key, int x, int y) { mykeyboard.special_down(key, x, y); });
 	glutSpecialUpFunc([](int key, int x, int y) { mykeyboard.special_up(key, x, y); });
 
+	glutMotionFunc([](int x, int y) { 
+		mykeyboard.motion(x, y, glutGetModifiers()); 
+		ProjectionMatrix = glm::perspective(fovy*TO_RADIAN, aspect_ratio, 100.0f, 20000.0f);
+	});
+
+	glutPassiveMotionFunc([](int x, int y) {mykeyboard.last_mouse_x = -1; mykeyboard.last_mouse_y = -1; });
+	
 }
 
 void prepare_shader_program(void) {
@@ -558,10 +568,10 @@ void init_objects(void) {
 		objects.push_back(new object(1, "Data/static_objects/txtdata/car_body_triangles_v.txt", TYPE_V));
 		objects.back()->is_binary_file = false;
 
-		objects.back()->material.specular_color[0] = 0;
-		objects.back()->material.specular_color[1] = 0;
-		objects.back()->material.specular_color[2] = 0;
-		objects.back()->material.specular_color[3] = 1;
+		objects.back()->material.ambient_color[0] = 0;
+		objects.back()->material.ambient_color[1] = 0;
+		objects.back()->material.ambient_color[2] = 0;
+		objects.back()->material.ambient_color[3] = 1;
 
 		float x = betman_x(i);
 		float y = betman_y(i);
