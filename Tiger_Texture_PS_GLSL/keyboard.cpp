@@ -15,6 +15,8 @@ extern std::vector<carmera>cams;
 extern carmera* cur_cam;
 extern int is_time_running;
 extern float fovy;
+extern bool togle[3];
+
 
 keyboard mykeyboard;
 
@@ -38,6 +40,16 @@ keyboard::~keyboard()
 void keyboard::key_down(unsigned char key, int x, int y)
 {
 	key_state[key] = true;
+
+
+	if (key == '1')
+		togle[0] = !togle[0];
+
+	if (key == '2')
+		togle[1] = !togle[1];
+
+	if (key == '3')
+		togle[2] = !togle[2];
 }
 
 void keyboard::key_up(unsigned char key, int x, int y)
@@ -71,11 +83,33 @@ void keyboard::motion(int x, int y, int mod)
 		else
 		{
 			if (x - last_mouse_x > 0) {
-				fovy *= 1.01;
+				cams[0].fovy *= 1.01;
 			}
 			else if(x - last_mouse_x < 0)
 			{
-				fovy *= 0.99;
+				cams[0].fovy *= 0.99;
+			}
+
+
+			last_mouse_x = x;
+			last_mouse_y = y;
+		}
+	}
+	else if (mod == GLUT_ACTIVE_ALT) {
+		printf("%d %d\n", x, y);
+
+		if (last_mouse_x == -1 && last_mouse_y == -1) {
+			last_mouse_x = x;
+			last_mouse_y = y;
+		}
+		else
+		{
+			if (x - last_mouse_x > 0) {
+				cams[1].fovy *= 1.01;
+			}
+			else if (x - last_mouse_x < 0)
+			{
+				cams[1].fovy *= 0.99;
 			}
 
 
@@ -92,30 +126,39 @@ void keyboard::motion(int x, int y, int mod)
 
 void keyboard::action()
 {
-	if(key_state['0'])
-		cur_cam = &cams[0];
-
-	if (key_state['1'])
-		cur_cam = &cams[1];
-
-
 	if (key_state['a']) {
-		slected->turn_left(1 * TO_RADIAN);
-		car1->move_forward(0.01);
+		cams[1].move_right(-5);
 	}
 
 	if (key_state['s']) {
-		car1->move_forward(-1);
+		cams[1].move_forward(-5);
 	}
 
 	if (key_state['d']) {
-		slected->turn_left(-1 * TO_RADIAN);
-		car1->move_forward(1);
+		cams[1].move_right(5);
 	}
 
 	if (key_state['w']) {
-		car1->move_forward(1);
+		cams[1].move_forward(5);
 	}
+
+	if (key_state['q']) {
+		cams[1].move_up(5);
+	}
+
+	if (key_state['e']) {
+		cams[1].move_up(-5);
+	}
+
+	if (key_state['c']) {
+		cams[1].turn_left(-2 * TO_RADIAN);
+	}
+
+	if (key_state['z']) {
+		cams[1].turn_left(2 * TO_RADIAN);
+	}
+
+
 
 	if (key_state[44]) {
 		cams[0].move(-1, 0, 0);

@@ -1,1 +1,11 @@
-﻿  Tiger_Texture_PS_GLSL.vcxproj -> C:\Users\admin\Desktop\GR\OpenGL-3D\Debug\Tiger_Texture_PS_GLSL.exe
+﻿  keyboard.cpp
+c:\usr\local\opengl\include\freeimage\freeimage.h : warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\keyboard.cpp(86): warning C4305: '*=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\keyboard.cpp(90): warning C4305: '*=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\keyboard.cpp(108): warning C4305: '*=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\keyboard.cpp(112): warning C4305: '*=': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\keyboard.cpp(176): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\keyboard.cpp(180): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\keyboard.cpp(184): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+c:\users\admin\desktop\gr\opengl-3d\tiger_texture_ps_glsl\keyboard.cpp(188): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  Tiger_Texture_PS_GLSL.vcxproj -> C:\Users\admin\Desktop\GR\OpenGL-3D\Debug\Tiger_Texture_PS_GLSL.exe

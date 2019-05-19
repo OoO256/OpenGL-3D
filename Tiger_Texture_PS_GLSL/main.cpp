@@ -86,13 +86,18 @@ object* slected;
 std::vector<carmera>cams;
 carmera* cur_cam;
 
-void display(glm::mat4 view) {
-	cams[1].move(slected->position + glm::vec3{ 0, 200, 0 } -glm::normalize(slected->velocity) * 100.0f);
-	cams[1].center = slected->position + glm::normalize(slected->velocity) * 100.0f;
+//float fovy = 45.0f;
+float aspect_ratio;
+bool togle[3] = {true, true, true};
 
-	ViewMatrix = view;
+void display(carmera* cam) {
+	//cams[1].move(slected->position + glm::vec3{ 0, 200, 0 } -glm::normalize(slected->velocity) * 100.0f);
+	//cams[1].center = slected->position + glm::normalize(slected->velocity) * 100.0f;	
 
-	
+	ViewMatrix = cam->getView();
+	ProjectionMatrix = cam->getProj();
+
+	glClearColor(0.1f, 0, 0.2, 1);
 
 	glUseProgram(h_ShaderProgram_simple);
 	ModelViewMatrix = glm::scale(ViewMatrix, glm::vec3(50.0f, 50.0f, 50.0f));
@@ -111,8 +116,8 @@ void display(glm::mat4 view) {
 	glUseProgram(h_ShaderProgram_TXPS);
 	set_material_floor();
 	glUniform1i(loc_texture, TEXTURE_ID_FLOOR);
-	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(-500.0f, 0.0f, 500.0f));
-	ModelViewMatrix = glm::scale(ModelViewMatrix, glm::vec3(1000.0f, 1000.0f, 1000.0f));
+	ModelViewMatrix = glm::translate(ViewMatrix, glm::vec3(-1500.0f, 0.0f, 1500.0f));
+	ModelViewMatrix = glm::scale(ModelViewMatrix, glm::vec3(3000.0f, 3000.0f, 3000.0f));
 	ModelViewMatrix = glm::rotate(ModelViewMatrix, -90.0f*TO_RADIAN, glm::vec3(1.0f, 0.0f, 0.0f));
 	ModelViewProjectionMatrix = ProjectionMatrix * ModelViewMatrix;
 	ModelViewMatrixInvTrans = glm::inverseTranspose(glm::mat3(ModelViewMatrix));
@@ -134,24 +139,50 @@ void display(glm::mat4 view) {
 }
 
 void display(void) {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
+	
 	glViewport(0, 0, 800, 800);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	display(cams[0].getView());
+	display(&cams[0]);
 
-	glViewport(0, 0, 300, 300);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	display(cams[1].getView());
+	if (togle[0]) {
+		glViewport(0, 800, 200, 200);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		display(&cams[1]);
+	}
+
+	cams[2].move(car1->body->position + glm::vec3(0, 100, 0));
+	cams[2].center = cams[2].pos + glm::normalize(car1->body->velocity) * 100.0f;
+
+	if (togle[1]) {
+		glViewport(200, 800, 200, 200);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		display(&cams[2]);
+	}
+
+	cams[3].move(tiger.position + glm::vec3(0, 10, 0));
+	cams[3].center = cams[3].pos + glm::normalize(tiger.velocity) * 10.0f;
+
+	if (togle[2]) {
+		glViewport(400, 800, 200, 200);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		display(&cams[3]);
+	}
+	
 	glutSwapBuffers();
 }
-
-float dt = 987654321;
 
 void timer_scene(int value) {
 	timestamp_scene = (timestamp_scene + 1) % UINT_MAX;
@@ -243,8 +274,7 @@ void timer_scene(int value) {
 		glutTimerFunc(10, timer_scene, 0);
 }
 
-float fovy = 45.0f;
-float aspect_ratio;
+
 
 void reshape(int width, int height) {
 	
@@ -252,7 +282,7 @@ void reshape(int width, int height) {
 	glViewport(0, 0, width, height);
 	
 	aspect_ratio = (float) width / height;
-	ProjectionMatrix = glm::perspective(fovy*TO_RADIAN, aspect_ratio, 100.0f, 20000.0f);
+	//ProjectionMatrix = glm::perspective(fovy*TO_RADIAN, aspect_ratio, 100.0f, 20000.0f);
 	/*
 	glm::mat4 projectionMatrix = glm::perspective(
 	glm::radians(FoV),  // 수직방향 시야각입니다 : "줌"의 크기. "카메라 렌즈" 를 생각해보세요. 이들은 보통 90도 (엑스트라 와이드) 에서 30도 (크게 확대한 경우) 사이에 있습니다
@@ -291,7 +321,7 @@ void register_callbacks(void) {
 
 	glutMotionFunc([](int x, int y) { 
 		mykeyboard.motion(x, y, glutGetModifiers()); 
-		ProjectionMatrix = glm::perspective(fovy*TO_RADIAN, aspect_ratio, 100.0f, 20000.0f);
+		//ProjectionMatrix = glm::perspective(fovy*TO_RADIAN, aspect_ratio, 100.0f, 20000.0f);
 	});
 
 	glutPassiveMotionFunc([](int x, int y) {mykeyboard.last_mouse_x = -1; mykeyboard.last_mouse_y = -1; });
@@ -480,15 +510,8 @@ void set_up_scene_lights(void) {
 }
 
 void init_objects(void) {
-	cams.emplace_back(1000, 1000, 1000);
-	cams.emplace_back(1000, 1000, 1000);
-	cur_cam = &cams[0];
-
 	tiger.rotate.push_front(align({ 0, -1, 0 }, { 0, 0, 1 }));
 	tiger.rotate.push_front(glm::mat4(1));		//tiger.velocity = glm::vec3(0, 0, 0);
-	
-
-
 	/*
 	tiger.original_dir = { 0, -1, 0 };
 	//optimus.original_dir = { 1, 0, 0 };
@@ -523,8 +546,19 @@ void init_objects(void) {
 	{
 		w->rotate.resize(2, glm::mat4(1));
 	}
+	
+	cams.emplace_back(1000, 1000, 1000);
+	cams.emplace_back(700, 700, 700);
+	cams.emplace_back(car1->body->position + glm::vec3(0, 100, 0));
+	cams.emplace_back(tiger.position + glm::vec3(0, -88, 62));
+
+	cur_cam = &cams[0];
+
+
 
 	objects.emplace_back(&tiger);
+
+
 	/*
 	objects.emplace_back(&ben);
 	objects.emplace_back(&wolf);
@@ -663,7 +697,7 @@ void main(int argc, char *argv[]) {
 
 	glutInit(&argc, argv);
   	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
-	glutInitWindowSize(800, 800);
+	glutInitWindowSize(1000, 1000);
 	glutInitContextVersion(3, 3);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 	glutCreateWindow(program_name);

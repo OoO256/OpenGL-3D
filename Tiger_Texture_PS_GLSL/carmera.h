@@ -27,8 +27,9 @@ class carmera
 public:
 	glm::vec3 pos;
 	spherical_coordinate spher;
+	float fovy = 45.0;
 
-	glm::vec3 center; 
+	glm::vec3 center;
 	glm::vec3 up;
 
 	carmera(glm::vec3 pos); 
@@ -38,6 +39,12 @@ public:
 	void move(float radius, float angle1, float angle2);
 	void move(glm::vec3);
 	glm::mat4 getView();
+	glm::mat4 getProj();
+
+	void move_forward(float);
+	void move_right(float);
+	void move_up(float);
+	void turn_left(float d);
 
 private:
 
