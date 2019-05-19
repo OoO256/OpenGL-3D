@@ -126,38 +126,58 @@ void keyboard::motion(int x, int y, int mod)
 
 void keyboard::action()
 {
-	if (key_state['a']) {
-		cams[1].move_right(-5);
-	}
+	if (togle[0]) {
+		if (key_state['a']) {
+			cams[1].move_right(-5);
+		}
 
-	if (key_state['s']) {
-		cams[1].move_forward(-5);
-	}
+		if (key_state['s']) {
+			cams[1].move_forward(-5);
+		}
 
-	if (key_state['d']) {
-		cams[1].move_right(5);
-	}
+		if (key_state['d']) {
+			cams[1].move_right(5);
+		}
 
-	if (key_state['w']) {
-		cams[1].move_forward(5);
-	}
+		if (key_state['w']) {
+			cams[1].move_forward(5);
+		}
 
-	if (key_state['q']) {
-		cams[1].move_up(5);
-	}
+		if (key_state['q']) {
+			cams[1].move_up(5);
+		}
 
-	if (key_state['e']) {
-		cams[1].move_up(-5);
-	}
+		if (key_state['e']) {
+			cams[1].move_up(-5);
+		}
 
-	if (key_state['c']) {
-		cams[1].turn_left(-2 * TO_RADIAN);
-	}
+		if (key_state['c']) {
+			cams[1].turn_left(-2 * TO_RADIAN);
+		}
 
-	if (key_state['z']) {
-		cams[1].turn_left(2 * TO_RADIAN);
+		if (key_state['z']) {
+			cams[1].turn_left(2 * TO_RADIAN);
+		}
 	}
+	else if (slected != nullptr)
+	{
+		if (key_state['a']) {
+			slected->turn_left(3 * TO_RADIAN);
+			printf("%f %f %f\n", slected->position.x, slected->position.y, slected->position.z);
+		}
 
+		if (key_state['s']) {
+			slected->move_forward(-5);
+		}
+
+		if (key_state['d']) {
+			slected->turn_left(-3 * TO_RADIAN);
+		}
+
+		if (key_state['w']) {
+			slected->move_forward(5);
+		}
+	}
 
 
 	if (key_state[44]) {

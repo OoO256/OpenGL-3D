@@ -69,12 +69,12 @@ std::vector<object *>objects;
 //object bike(1, "Data/static_objects/bike_vnt.geom", TYPE_VNT);
 //object bus(1, "Data/static_objects/bus_vnt.geom", TYPE_VNT);
 //object godzilla(1, "Data/static_objects/godzilla_vnt.geom", TYPE_VNT);
-//object ironman(1, "Data/static_objects/ironman_vnt.geom", TYPE_VNT);
-//object tank(1, "Data/static_objects/tank_vnt.geom", TYPE_VNT);
+object ironman(1, "Data/static_objects/ironman_vnt.geom", TYPE_VNT);
+object tank(1, "Data/static_objects/tank_vnt.geom", TYPE_VNT);
 object tiger(12, "Data/dynamic_objects/tiger/Tiger_%02d_triangles_vnt.geom", TYPE_VNT);
-//object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom", TYPE_VNT);
-//object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom", TYPE_VNT);
-//object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom", TYPE_VNT);
+object ben(30, "Data/dynamic_objects/ben/ben_vn%02d.geom", TYPE_VNT);
+object wolf(17, "Data/dynamic_objects/wolf/wolf_%02d_vnt.geom", TYPE_VNT);
+object spider(16, "Data/dynamic_objects/spider/spider_vnt_%02d.geom", TYPE_VNT);
 
 
 object cow2(1, "Data/static_objects/txtdata/cow_triangles_v.txt", TYPE_V);
@@ -97,7 +97,7 @@ void display(carmera* cam) {
 	ViewMatrix = cam->getView();
 	ProjectionMatrix = cam->getProj();
 
-	glClearColor(0.1f, 0, 0.2, 1);
+	glClearColor(0x8C / 225.0, 0xC4 / 225.0, 0xCD / 225.0, 0.5);
 
 	glUseProgram(h_ShaderProgram_simple);
 	ModelViewMatrix = glm::scale(ViewMatrix, glm::vec3(50.0f, 50.0f, 50.0f));
@@ -157,7 +157,7 @@ void display(void) {
 		display(&cams[1]);
 	}
 
-	cams[2].move(car1->body->position + glm::vec3(0, 100, 0));
+	cams[2].move(car1->body->position + glm::vec3(-3.0f, 0.5f, 2.5f));
 	cams[2].center = cams[2].pos + glm::normalize(car1->body->velocity) * 100.0f;
 
 	if (togle[1]) {
@@ -169,7 +169,7 @@ void display(void) {
 		display(&cams[2]);
 	}
 
-	cams[3].move(tiger.position + glm::vec3(0, 10, 0));
+	cams[3].move(tiger.position + glm::vec3(0, 30, 0));
 	cams[3].center = cams[3].pos + glm::normalize(tiger.velocity) * 10.0f;
 
 	if (togle[2]) {
@@ -195,6 +195,28 @@ void timer_scene(int value) {
 			obj->next_frame();
 		}
 	}
+	else
+	{
+		ben.next_frame();
+	}
+	
+	if (ben.rotate.empty())
+		ben.rotate.push_front(glm::mat4(1));
+
+	ben.rotate.front() = align({ 0, 0, 1 }, ben.velocity);
+
+	
+	spider.acceleration = glm::normalize(ben.position - spider.position) * 100.0f;
+	spider.updata_pos();
+	
+	if (spider.rotate.empty())
+		spider.rotate.push_front(glm::mat4(1));
+
+	spider.rotate.front() = align({ 0, 0, 1 }, spider.velocity);
+
+
+
+
 	float radius_heart = 20.0f;
 	float theta = timestamp_scene * 0.01;
 
@@ -264,11 +286,6 @@ void timer_scene(int value) {
 		);
 	}
 
-
-
-
-
-
 	glutPostRedisplay();
 	if (is_time_running)
 		glutTimerFunc(10, timer_scene, 0);
@@ -282,17 +299,6 @@ void reshape(int width, int height) {
 	glViewport(0, 0, width, height);
 	
 	aspect_ratio = (float) width / height;
-	//ProjectionMatrix = glm::perspective(fovy*TO_RADIAN, aspect_ratio, 100.0f, 20000.0f);
-	/*
-	glm::mat4 projectionMatrix = glm::perspective(
-	glm::radians(FoV),  // 수직방향 시야각입니다 : "줌"의 크기. "카메라 렌즈" 를 생각해보세요. 이들은 보통 90도 (엑스트라 와이드) 에서 30도 (크게 확대한 경우) 사이에 있습니다
-	4.0f / 3.0f, // 화면 비 입니다. 이것은 당신의 윈도우 크기에 의존합니다. 4/3 == 800/600 == 1280/960 인데, 어디서 본것 같죠 ?
-	0.1f,        // Near clipping plane (근거리 잘라내기 평면). 최대한 크게 하세요. 아니면 정확도 문제가 생길 수 있습니다.
-	100.0f       // Far clipping plane (원거리 잘라내기 평면). 최대한 작게 하세요.
-);
-	*/
-
-
 	glutPostRedisplay();
 }
 
@@ -512,6 +518,26 @@ void set_up_scene_lights(void) {
 void init_objects(void) {
 	tiger.rotate.push_front(align({ 0, -1, 0 }, { 0, 0, 1 }));
 	tiger.rotate.push_front(glm::mat4(1));		//tiger.velocity = glm::vec3(0, 0, 0);
+
+
+	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
+	spider.scale = glm::vec3(50.0f, -50.0f, 50.0f);
+	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
+	tank.scale = glm::vec3(10.0f, 10.0f, 10.0f);
+	//tank.rotate.push_front( align(glm::vec3(-90.0f*TO_RADIAN, 0, 0), { 0, 0, 1 }) );
+	ironman.scale = glm::vec3(20.0f, 20.0f, 20.0f);
+
+	ben.position = { 300, 0, 0 };
+	spider.position = { 200, 0, 0 };
+	wolf.position = { 100, 0, 0 };
+	tank.position = { -100, 0, 0 };
+	ironman.position = { -200, 0, 0 };
+
+	slected = &ben;
+
+	//ironman.filename_texture = "Data/dynamic_objects/tiger/red.jpg";
+	//spider.filename_texture = "Data/dynamic_objects/tiger/black.jpg";
+	
 	/*
 	tiger.original_dir = { 0, -1, 0 };
 	//optimus.original_dir = { 1, 0, 0 };
@@ -520,17 +546,12 @@ void init_objects(void) {
 	tank.original_dir = { 0, -1, 0 };
 
 
-	ben.scale = glm::vec3(100.0f, -100.0f, -100.0f);
-	wolf.scale = glm::vec3(100.0f, 100.0f, 100.0f);
-	spider.scale = glm::vec3(50.0f, -50.0f, 50.0f);
 	optimus.scale = glm::vec3(0.1f, 0.1f, 0.1f);
 	cow.scale = glm::vec3(80.0f, 80.0f, 80.0f);
 
 	bike.scale = glm::vec3(20.0f, 20.0f, 20.0f);
 	bus.scale = glm::vec3(3.0f, 3.0f, 3.0f);
 	godzilla.scale = glm::vec3(0.5f, 0.5f, 0.5f);
-	ironman.scale = glm::vec3(20.0f, 20.0f, 20.0f);
-	tank.scale = glm::vec3(10.0f, 10.0f, 10.0f);
 	tank.rotate = glm::vec3(-90.0f*TO_RADIAN, 0, 0);
 	*/
 
@@ -539,7 +560,6 @@ void init_objects(void) {
 	cow2.is_binary_file = false;
 
 	car1 = new car();
-	slected = &tiger;
 	car1->body->rotate.push_front(align({ 1, 0, 0 }, { 0, 0, 1 }));
 
 	for (auto& w : car1->wheels)
@@ -559,20 +579,17 @@ void init_objects(void) {
 	objects.emplace_back(&tiger);
 
 
-	/*
 	objects.emplace_back(&ben);
 	objects.emplace_back(&wolf);
 	objects.emplace_back(&spider);
-
+	objects.emplace_back(&ironman);
+	objects.emplace_back(&tank);
+	/*
 	objects.emplace_back(&optimus);
 	objects.emplace_back(&cow);
 	objects.emplace_back(&bike);
 	objects.emplace_back(&bus);
 	objects.emplace_back(&godzilla);
-	objects.emplace_back(&ironman);
-	objects.emplace_back(&tank);
-
-
 	objects.emplace_back(&cow2);
 	*/
 	
@@ -628,15 +645,6 @@ void init_objects(void) {
 
 		objects.back()->rotate.push_front(align({ 0, 0, 1 }, objects.back()->velocity));
 	}
-
-	/*
-	int obj_cnt = 0;
-	for (auto& obj : objects) {
-		obj->position.x = 300.0f * cos(TO_RADIAN * 30 * obj_cnt);
-		obj->position.z = 300.0f * sin(TO_RADIAN * 30 * obj_cnt);
-		obj_cnt++;
-	}
-	*/
 }
 
 void prepare_scene(void) {

@@ -15,9 +15,6 @@
 #define TEXTURE_ID_FLOOR 0
 #define TEXTURE_ID_TIGER 1
 
-
-
-
 extern GLuint texture_names[N_TEXTURES_USED];
 constexpr int MAX_FILENAME = 512;
 constexpr Material_Parameters tiger_material = {
@@ -200,7 +197,7 @@ glm::mat4 object::getModelMatrix()
 }
 
 void object::updata_pos() {
-	float dtime = timestamp_scene - timestamp_last;
+	float dtime = (timestamp_scene - timestamp_last)*0.01;
 
 	position += velocity * dtime + 0.5f * acceleration * dtime * dtime;
 	velocity += (acceleration)* dtime;

@@ -84,6 +84,9 @@ glm::mat4 align(glm::vec3 from, glm::vec3 to) {
 	auto axis = glm::cross(from, to);
 	float angle = acos( glm::dot(from, to) / glm::length(from) / glm::length(to));
 
+	if (glm::length(axis) == 0)
+		return glm::mat4(1);
+
 	return glm::rotate(glm::mat4(1), angle, axis);
 }
 
