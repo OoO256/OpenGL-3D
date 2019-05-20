@@ -678,7 +678,7 @@ void init_objects(void) {
 	//tank.rotate.push_front( align(glm::vec3(-90.0f*TO_RADIAN, 0, 0), { 0, 0, 1 }) );
 	ironman.scale = glm::vec3(20.0f, 20.0f, 20.0f);
 
-	ben.position = { -500, 0, -500 };
+	ben.position = { -300, 0, -300 };
 	ben.acceleration = { 0, -1000, 0 };
 	spider.position = { -500, 0, 0 };
 	spider.acceleration = { 0, -500, 0 };
@@ -839,14 +839,56 @@ void initialize_glew(void) {
 	fprintf(stdout, "*********************************************************\n\n");
 }
 
-void greetings(char *program_name, char messages[][256], int n_message_lines) {
+void greetings(char *program_name) {
 	fprintf(stdout, "**************************************************************\n\n");
 	fprintf(stdout, "  PROGRAM NAME: %s\n\n", program_name);
 	fprintf(stdout, "    This program was coded for CSE4170 students\n");
 	fprintf(stdout, "      of Dept. of Comp. Sci. & Eng., Sogang University.\n\n");
 
-	for (int i = 0; i < n_message_lines; i++)
-		fprintf(stdout, "%s\n", messages[i]);
+	fprintf(stdout, "      KEYS : only works with small letter\n\n");
+
+	fprintf(stdout, "      1, 2, 3 : togle/untogle 1st, 2nd, 3rd subwindow respectively\n\n");
+
+	fprintf(stdout, "MAIN WINDOW\n");
+	fprintf(stdout, "	shift + pressed mouse move right : zoom in\n");
+	fprintf(stdout, "	shift + pressed mouse move left : zoom out\n");
+	fprintf(stdout, "	right arrow key : main camera move right\n");
+	fprintf(stdout, "	left arrow key : main camera move left\n");
+	fprintf(stdout, "	up arrow key : main camera move up\n");
+	fprintf(stdout, "	down arrow key : main camera move down\n");
+
+
+
+
+	fprintf(stdout, "\n");
+	fprintf(stdout, "SUB-WINDOW 1\n");
+	fprintf(stdout, "	if first subwindow togled :\n");
+	fprintf(stdout, "		q : subcamera1 to go up\n");
+	fprintf(stdout, "		e : subcamera1 to go down\n");
+	fprintf(stdout, "		w : subcamera1 to go forward\n");
+	fprintf(stdout, "		s : subcamera1 to go backward\n");
+	fprintf(stdout, "		z : subcamera1 to rotate right\n");
+	fprintf(stdout, "		c : subcamera1 to roate left\n");
+	fprintf(stdout, "		ALT + pressed mouse move right : zoom in\n");
+	fprintf(stdout, "		ALT + pressed mouse move left : zoom out\n");
+
+
+	fprintf(stdout, "\n");
+	fprintf(stdout, "	if first subwindow is not togled :\n");
+	fprintf(stdout, "		w : ben run forward\n");
+	fprintf(stdout, "		s : ben run backward\n");
+	fprintf(stdout, "		d : ben rotate right\n");
+	fprintf(stdout, "		s : ben rotate left\n");
+
+	fprintf(stdout, "\n");
+	fprintf(stdout, "	t : spider follow ben\n");
+
+	fprintf(stdout, "\n");
+	fprintf(stdout, "	u : ironman go up\n");
+	fprintf(stdout, "	i : ironman rotate\n");
+	fprintf(stdout, "	o : ironman stop to rotate\n");
+
+
 	fprintf(stdout, "\n**************************************************************\n\n");
 
 	initialize_glew();
@@ -855,7 +897,6 @@ void greetings(char *program_name, char messages[][256], int n_message_lines) {
 #define N_MESSAGE_LINES 1
 void main(int argc, char *argv[]) {
 	char program_name[64] = "Sogang CSE4170 3D Objects";
-	char messages[N_MESSAGE_LINES][256] = { "    - Keys used: '0', '1', 'a', 't', 'f', 'c', 'd', 'y', 'u', 'i', 'o', 'ESC'"  };
 
 	glutInit(&argc, argv);
   	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_MULTISAMPLE);
@@ -864,7 +905,7 @@ void main(int argc, char *argv[]) {
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 	glutCreateWindow(program_name);
 
-	greetings(program_name, messages, N_MESSAGE_LINES);
+	greetings(program_name);
 	initialize_renderer();
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);

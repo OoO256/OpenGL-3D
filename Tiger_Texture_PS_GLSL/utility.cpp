@@ -104,11 +104,11 @@ void My_glTexImage2D_from_file(char *filename) {
 	tx_pixmap = FreeImage_Load(tx_file_format, filename);
 	tx_bits_per_pixel = FreeImage_GetBPP(tx_pixmap);
 
-	fprintf(stdout, " * A %d-bit texture was read from %s.\n", tx_bits_per_pixel, filename);
+	//fprintf(stdout, " * A %d-bit texture was read from %s.\n", tx_bits_per_pixel, filename);
 	if (tx_bits_per_pixel == 32)
 		tx_pixmap_32 = tx_pixmap;
 	else {
-		fprintf(stdout, " * Converting texture from %d bits to 32 bits...\n", tx_bits_per_pixel);
+		//fprintf(stdout, " * Converting texture from %d bits to 32 bits...\n", tx_bits_per_pixel);
 		tx_pixmap_32 = FreeImage_ConvertTo32Bits(tx_pixmap);
 	}
 
@@ -117,7 +117,7 @@ void My_glTexImage2D_from_file(char *filename) {
 	data = FreeImage_GetBits(tx_pixmap_32);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
-	fprintf(stdout, " * Loaded %dx%d RGBA texture into graphics memory.\n\n", width, height);
+	//fprintf(stdout, " * Loaded %dx%d RGBA texture into graphics memory.\n\n", width, height);
 
 	FreeImage_Unload(tx_pixmap_32);
 	if (tx_bits_per_pixel != 32)

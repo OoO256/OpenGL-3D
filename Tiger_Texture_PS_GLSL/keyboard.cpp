@@ -76,7 +76,6 @@ void keyboard::special_up(int key, int x, int y)
 void keyboard::motion(int x, int y, int mod)
 {
 	if (mod == GLUT_ACTIVE_SHIFT) {
-		printf("%d %d\n", x, y);
 
 		if (last_mouse_x == -1 && last_mouse_y == -1) {
 			last_mouse_x = x;
@@ -98,7 +97,6 @@ void keyboard::motion(int x, int y, int mod)
 		}
 	}
 	else if (mod == GLUT_ACTIVE_ALT) {
-		printf("%d %d\n", x, y);
 
 		if (last_mouse_x == -1 && last_mouse_y == -1) {
 			last_mouse_x = x;
