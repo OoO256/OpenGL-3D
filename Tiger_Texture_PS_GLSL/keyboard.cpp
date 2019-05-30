@@ -163,7 +163,7 @@ void keyboard::action()
 	{
 		if (key_state['a']) {
 			slected->turn_left(3 * TO_RADIAN);
-			printf("%f %f %f\n", slected->position.x, slected->position.y, slected->position.z);
+			//printf("%f %f %f\n", slected->position.x, slected->position.y, slected->position.z);
 		}
 
 		if (key_state['s']) {

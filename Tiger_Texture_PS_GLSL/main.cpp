@@ -501,14 +501,14 @@ void set_up_scene_lights(void) {
 	light[0].position[0] = 0.0f; light[0].position[1] = 100.0f; 	// point light position in EC
 	light[0].position[2] = 0.0f; light[0].position[3] = 1.0f;
 
-	light[0].ambient_color[0] = 0.3f; light[0].ambient_color[1] = 0.3f;
-	light[0].ambient_color[2] = 0.3f; light[0].ambient_color[3] = 1.0f;
+	light[0].ambient_color[0] = 0.1f; light[0].ambient_color[1] = 0.1f;
+	light[0].ambient_color[2] = 0.1f; light[0].ambient_color[3] = 1.0f;
 
-	light[0].diffuse_color[0] = 0.5f; light[0].diffuse_color[1] = 0.5f;
-	light[0].diffuse_color[2] = 0.5f; light[0].diffuse_color[3] = 1.5f;
+	light[0].diffuse_color[0] = 0.1f; light[0].diffuse_color[1] = 0.1f;
+	light[0].diffuse_color[2] = 0.1f; light[0].diffuse_color[3] = 1.5f;
 
-	light[0].specular_color[0] = 0.8f; light[0].specular_color[1] = 0.8f;
-	light[0].specular_color[2] = 0.8f; light[0].specular_color[3] = 1.0f;
+	light[0].specular_color[0] = 0.2f; light[0].specular_color[1] = 0.2f;
+	light[0].specular_color[2] = 0.2f; light[0].specular_color[3] = 1.0f;
 
 	// spot_light_WC: use light 1
 	light[1].light_on = 1;
@@ -874,16 +874,18 @@ void greetings(char *program_name) {
 
 
 	fprintf(stdout, "\n");
-	fprintf(stdout, "	if first subwindow is not togled :\n");
+	fprintf(stdout, "BEN	if first subwindow is not togled :\n");
 	fprintf(stdout, "		w : ben run forward\n");
 	fprintf(stdout, "		s : ben run backward\n");
 	fprintf(stdout, "		d : ben rotate right\n");
 	fprintf(stdout, "		s : ben rotate left\n");
 
 	fprintf(stdout, "\n");
+	fprintf(stdout, "SPIDER\n");
 	fprintf(stdout, "	t : spider follow ben\n");
 
 	fprintf(stdout, "\n");
+	fprintf(stdout, "IORNMAN\n");
 	fprintf(stdout, "	u : ironman go up\n");
 	fprintf(stdout, "	i : ironman rotate\n");
 	fprintf(stdout, "	o : ironman stop to rotate\n");

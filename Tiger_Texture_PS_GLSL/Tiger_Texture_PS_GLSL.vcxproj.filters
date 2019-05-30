@@ -42,9 +42,6 @@
     <ClCompile Include="keyboard.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="light.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="My_Shading.h">
@@ -75,9 +72,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="keyboard.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="light.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
