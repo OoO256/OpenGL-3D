@@ -2,7 +2,7 @@
 
 20171667 이용욱
 
-
+![](.\demo.gif)
 
 ## 빌드 시 주의사항
 
@@ -40,7 +40,7 @@ visual Studio 에서 windows SDK를 찾지 못해 <stdio.h> 등의 라이브러�
 
 호랑이는 아래와 같은 베트맨 모양을 한 경로를 따라 움직인다
 
-![](C:\Users\R912\Desktop\OpenGL-3D\betman.PNG)
+![](.\betman.PNG)
 $$
 x = \frac{|t|}{t}(\frac{1}{2}|t| - \frac{1}{4}||t|-1| + \frac{1}{2}||t|-3| - \frac{3}{4}||t|-5| - \frac{3}{2}||t|-13| + \frac{1}{4}||t|-17| + \frac{5}{4}||t|-21| + 7sin(\frac{\pi}{12} (||t|-5| - ||t|-8| + 3) + \frac{1}{100} ((||t|-8| - ||t|-13| - 5)^3 + 1.5)
 $$
@@ -119,7 +119,7 @@ $$
 x = 16sin(\theta)^3 * radius \\
 y = (13cos(\theta) - 5cos(2\theta) - 2cos(3\theta) - cos(4\theta)) * radius
 $$
-![](C:\Users\R912\Desktop\OpenGL-3D\heart.PNG)
+![](.\heart.PNG)
 
  이 때 그레프의 미분을 통해 자동차를 회전시켰으며,
 
